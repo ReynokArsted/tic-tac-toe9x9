@@ -1,0 +1,21 @@
+.field_position {
+    display: flex;
+    justify-content: center;
+}
+
+field {
+    border: slateblue 5px solid;
+    height: 400px;
+    width: 400px;
+    margin-top: 100px;
+    align-self: center;
+}
+
+chat {
+    border: slateblue 5px solid;
+    height: 400px;
+    width: 270px;
+    margin-top: 100px;
+    margin-left: 50px;
+    align-self: center;
+}
