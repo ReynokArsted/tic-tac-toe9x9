@@ -7,25 +7,22 @@
     "ROND" 100;
 }
 
-.font {
-    font-family: "Quicksand", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 600;
+.press-start-2p-regular {
+    font-family: "Press Start 2P", system-ui;
+    font-weight: 400;
     font-style: normal;
-    font-variation-settings: 
-    "ROND" 100;
 }
 
 .position {
     display: flex;
     justify-content: space-around;
-    background-color: slateblue;
+    background-color: #6a5acd;
     border-radius: 5px;
     height: 50px;
 }
 
 .logo {
-    font-size: 30px;
+    font-size: 35px;
     color: #F4F9B4;
     align-self: center;
 }
@@ -38,7 +35,7 @@
 {
     border: #F4F9B4 5px solid;
     background-color: #F4F9B4;
-    color: slateblue;
+    color: rgb(106, 90, 205);
     border-radius: 5px;
     margin: 5px;
     align-self: center;
