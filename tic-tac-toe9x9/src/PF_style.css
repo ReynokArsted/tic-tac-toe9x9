@@ -1,3 +1,45 @@
+.images{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.boarded_image {
+    border: solid 7px #F4F9B4;
+    border-radius: 5px;
+    padding: 15px;
+    padding-bottom: 0px;
+    margin: 40px;
+}
+
+.image {
+    width: 250px;
+    height: 250px;
+    padding: 10xp;
+}
+
+.hello_text {
+    font-size: 26px;
+    text-align: center;
+    color: slateblue;
+    margin-top: 50px;
+}
+
+.under_text {
+    font-weight: 700;
+    text-align: center;
+    margin: 0px;
+    background-color: #F4F9B4;
+    color: #6a5acd;
+    border: solid 10px #F4F9B4;
+    border-radius: 5px 5px 0px 0px;
+}
+
+a {
+    text-decoration: none;
+}
+
 .field_position {
     display: flex;
     justify-content: center;
