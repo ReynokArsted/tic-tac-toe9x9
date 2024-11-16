@@ -2,6 +2,7 @@ import { Component } from "react";
 import {} from "./PF_style.css"
 import img from "./images/img1.png"
 import forum_icon from "./images/forum.png"
+import { Link } from "react-router-dom";
 
 export class Field extends Component {
     render() {
@@ -21,16 +22,16 @@ export class Field extends Component {
                 </div>
                 <div className="images">
                     <div className="boarded_image">
-                        <a href="">
-                            <img className="image" src={img} href="#"></img>
+                        <Link to="/game_rules">
+                            <img className="image" src={img} alt=""></img>
                             <p className="font under_text press-start-2p-regular">Правила игры</p>
-                        </a>
+                        </Link>
                     </div>
                     <div className="boarded_image">
-                        <a href="">
-                            <img className="image" src={forum_icon} href="#"></img>
+                        <Link to="/forum">
+                            <img className="image" src={forum_icon} alt=""></img>
                             <p className="font under_text press-start-2p-regular">Форум</p>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </>
