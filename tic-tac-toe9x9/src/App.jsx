@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider} from 'react-router-dom';
 import { Panel } from "./Panel";
 import { Field } from "./PlayField";
+import { SignUp } from './sign_up';
 
 const router = createBrowserRouter([
   {
@@ -18,8 +19,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/sign_up',
-        //element: <SignUp/>
-        element: <></>
+        element: <SignUp/>
       },
       {
         path: '/sign_in',
@@ -35,11 +35,14 @@ const router = createBrowserRouter([
         path: '/forum',
         //element: <Forum/>
         element: <></>
+      },
+      {
+        path: '/profile',
+        element: <></>
       }
     ]
   }
 ])
-
 
 function App() {
   var userLog = false
