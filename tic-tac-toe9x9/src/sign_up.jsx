@@ -1,4 +1,7 @@
 import { Component } from "react";
+import { AppContext } from "./Context";
+
+
 
 export class SignUp extends Component {
     state = {
@@ -9,6 +12,8 @@ export class SignUp extends Component {
         errorKey: null,
         errorPlace: null
     }
+
+    static contextType = AppContext
 
     UpdateData = (e) => { 
         const {name, value} = e.target
@@ -30,7 +35,7 @@ export class SignUp extends Component {
         console.log(`Пароль: ${password}`)
         console.log(`Имя игрока: ${name}`)
 
-        if (login === "" && password === "" && name === "") {
+        if (login === "" || password === "" || name === "") {
             this.setState({errorKey: 1})
             return
         }
@@ -55,14 +60,12 @@ export class SignUp extends Component {
             errorKey: 0
         })
 
-        window.location.href = "/profile" // Сделать иной переход? 
+        this.context.setName(name)
+        this.context.login()
     }
 
     render () {
         const { login, password, name, showPasswordKey, errorKey, errorPlace} = this.state
-        //switch (errorKey) {
-        //    case 0: 
-        //}
         return (
             <>
                 <label>Регистрация</label>
@@ -80,11 +83,11 @@ export class SignUp extends Component {
                     <input name="name" value={name} onChange={(e) => this.UpdateData(e)}/>
                 </div>
                 <button onClick={this.LogButtonClicked}>Зарегистироваться</button>
-                {errorKey === 0 && <label>Регистрация прошла успешно!</label>}
-                {errorKey === 1 && <label>Одно или более полей пусты<br></br>
-                Пожалуйста, заполните пустые поля!</label>}
-                {errorKey === 2 && <label>В начале или конце {errorPlace} есть пробелы<br></br>
-                Пожалуйста, напишите без них!</label>}
+                {errorKey === 0 && <p>Регистрация прошла успешно!</p>}
+                {errorKey === 1 && <p>Одно или более полей пусты<br></br>
+                Пожалуйста, заполните пустые поля!</p>}
+                {errorKey === 2 && <p>В начале или конце {errorPlace} есть пробелы<br></br>
+                Пожалуйста, напишите без них!</p>}
             </>
         )
     }
