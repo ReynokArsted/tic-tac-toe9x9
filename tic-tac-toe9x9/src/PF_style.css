@@ -8,7 +8,7 @@
 .boarded_image {
     border: solid 7px #F4F9B4;
     border-radius: 5px;
-    padding: 15px;
+    padding: 20px;
     padding-bottom: 0px;
     margin: 40px;
 }
@@ -16,7 +16,7 @@
 .image {
     width: 250px;
     height: 250px;
-    padding: 10xp;
+    padding-bottom: 20px;
 }
 
 .hello_text {
