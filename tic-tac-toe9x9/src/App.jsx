@@ -1,11 +1,13 @@
 import { createBrowserRouter, RouterProvider} from 'react-router-dom';
+import AvatarForPanel from "./images/avatar24.png"
+import AvatarForProfile from "./images/avatar100.png" 
 import { Panel } from "./Panel";
-import { Field } from "./PlayField";
+import { MainPage } from "./main_page";
 import { SignUp } from './sign_up';
+import { SignIn } from './sign_in';
 import { AppContext } from './Context';
-import {useState } from 'react';
-import AvatarPath from './images/avatar24.png' 
-
+import { useState } from 'react';
+import { Profile } from './Profile';
 
 const router = createBrowserRouter([
   {
@@ -14,7 +16,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Field/>
+        element: <MainPage/>
       },
       {
         path: '/game_rules',
@@ -27,8 +29,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/sign_in',
-        //element: <SignIn/>
-        element: <></>
+        element: <SignIn/>
       },
       {
         path: '/game',
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: <></>
+        element: <Profile/>
       }
     ]
   }
@@ -51,7 +52,9 @@ const router = createBrowserRouter([
 function App() {
   const [UserIsLoged, setUserIsLoged] = useState(false)
   const [UserName, setUserName] = useState("nameless")
-  const [UserAvatar, setUserAvatar] = useState(AvatarPath)
+  const [UserAvatarForPanel, setUserAvatarForPanel] = useState(AvatarForPanel)
+  const [UserAvatarForProfile, setUserAvatarForProfile] = useState(AvatarForProfile)
+  const [vinNumber, setVinNumber] = useState(0)
 
   const login = () => {
     setUserIsLoged(true)
@@ -65,12 +68,17 @@ function App() {
     setUserName(name)
   }
 
-  const setAvatar = () => { // Как сохранить аватар, который загружает пользователь?
-    setUserAvatar()
+  const setAvatar = (path) => { // Как сохранить аватар, который загружает пользователь?
+    setUserAvatarForPanel(path)
+    setUserAvatarForProfile(path)
+  }
+
+  const setVins = (number) => {
+    setVinNumber(number)
   }
 
   return (
-  <AppContext.Provider value={{UserIsLoged, UserName, UserAvatar, login, logout, setName, setAvatar}}>
+  <AppContext.Provider value={{UserIsLoged, UserName, UserAvatarForPanel, UserAvatarForProfile, vinNumber, login, logout, setName, setAvatar, setVins}}>
     <div className="App">
       <RouterProvider router={router}></RouterProvider>
     </div>
