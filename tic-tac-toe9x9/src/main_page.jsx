@@ -1,5 +1,5 @@
 import { Component } from "react";
-import {} from "./PF_style.css"
+import {} from "./game.css"
 import rules_icon from "./images/img1.png"
 import forum_icon from "./images/forum.png"
 import game_icon from "./images/game.png"
@@ -47,7 +47,7 @@ export class MainPage extends Component {
                     {/* Отображение начальной страницы для зарегистрированного пользователя */}
                     <div className="hello_text press-start-2p-regular">
                         <p>Привет, {UserName}!</p>
-                        <p>Готов начать игру?</p>
+                        <p>Готовы начать игру?</p>
                     </div>
                     <div className="images">
                         <div className="boarded_image">

@@ -8,6 +8,7 @@ import { SignIn } from './sign_in';
 import { AppContext } from './Context';
 import { useState } from 'react';
 import { Profile } from './Profile';
+import { Board } from './Game';
 
 const router = createBrowserRouter([
   {
@@ -33,8 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/game',
-        //element: <PlayField/>
-        element: <></>
+        element: <Board/>
       },
       {
         path: '/forum',
