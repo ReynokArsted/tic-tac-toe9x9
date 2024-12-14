@@ -210,6 +210,7 @@ export class Board extends Component {
 
     // Обработчик клика на клетку
     SClick = (fieldIndex, index) => {
+        console.log(`click field ${fieldIndex+1}, index ${index+1}`)
         
         // Проверка, завершена ли игра или занята ли клетка, или заполнено ли большее поле
 
