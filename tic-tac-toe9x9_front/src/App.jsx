@@ -9,6 +9,10 @@ import { AppContext } from './Context';
 import { useState } from 'react';
 import { Profile } from './Profile';
 import { Board } from './Game';
+import { Forum } from './Forum/Forum';
+import { TopicDis } from './Forum/TopicDis';
+import { NewTopic } from './Forum/NewTopic';
+import { EditTopic } from './Forum/EditTopic';
 
 const router = createBrowserRouter([
   {
@@ -38,12 +42,23 @@ const router = createBrowserRouter([
       },
       {
         path: '/forum',
-        //element: <Forum/>
-        element: <></>
+        element: <Forum/>
       },
       {
         path: '/profile',
         element: <Profile/>
+      },
+      {
+        path: '/topic',
+        element: <TopicDis/>
+      },
+      {
+        path: '/new_topic',
+        element: <NewTopic/>
+      },
+      {
+        path: '/edit_topic',
+        element: <EditTopic/>
       }
     ]
   }
@@ -55,9 +70,11 @@ function App() {
   const [UserAvatarForPanel, setUserAvatarForPanel] = useState(AvatarForPanel)
   const [UserAvatarForProfile, setUserAvatarForProfile] = useState(AvatarForProfile)
   const [vinNumber, setVinNumber] = useState(0)
+  //const [Posts, setUserPosts] = useState(null)
 
   const login = () => {
     setUserIsLoged(true)
+
   }
 
   const logout = () => {
@@ -76,6 +93,10 @@ function App() {
   const setVins = (number) => {
     setVinNumber(number)
   }
+
+  //const setPosts = (list) => {
+  //  setUserPosts(list)
+  //}
 
   return (
   <AppContext.Provider value={{UserIsLoged, UserName, UserAvatarForPanel, UserAvatarForProfile, vinNumber, login, logout, setName, setAvatar, setVins}}>
