@@ -55,7 +55,6 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 	}
 
 }
-<<<<<<< HEAD
 func (srv *Server) SingUpHandler(c echo.Context) error {
 	if c.Request().Method != http.MethodGet {
 		return c.String(http.StatusMethodNotAllowed, "Method not allowed")
@@ -83,5 +82,3 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 	}
 
 }
-=======
->>>>>>> c2702ba2 (Sing_in_auth)

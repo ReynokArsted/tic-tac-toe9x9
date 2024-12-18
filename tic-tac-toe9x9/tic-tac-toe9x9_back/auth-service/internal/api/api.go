@@ -18,12 +18,8 @@ func NewServer(ip string, port int, uc Usecase) *Server {
 		Address: fmt.Sprintf("%s:%d", ip, port),
 		uc:      uc,
 	}
-<<<<<<< HEAD
 	srv.Server.GET("/singIn", srv.SingInHandler)
 	srv.Server.GET("/singUp", srv.SingUpHandler)
-=======
-	srv.Server.POST("/singIn", srv.SingInHandler)
->>>>>>> c2702ba2 (Sing_in_auth)
 
 	return srv
 }
