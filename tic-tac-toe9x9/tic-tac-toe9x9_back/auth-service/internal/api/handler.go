@@ -20,7 +20,11 @@ func NewUserHandler(provider *provider.Provider) *UserHandler {
 
 // CreateOrUpdateUser обрабатывает запрос на создание или обновление пользователя
 func (srv *Server) SingInHandler(c echo.Context) error {
+<<<<<<< HEAD
 	if c.Request().Method != http.MethodGet {
+=======
+	if c.Request().Method != http.MethodPost {
+>>>>>>> c2702ba2 (Sing_in_auth)
 		return c.String(http.StatusMethodNotAllowed, "Method not allowed")
 	}
 	// Распарсиваем JSON-тело запроса
@@ -51,6 +55,7 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 	}
 
 }
+<<<<<<< HEAD
 func (srv *Server) SingUpHandler(c echo.Context) error {
 	if c.Request().Method != http.MethodGet {
 		return c.String(http.StatusMethodNotAllowed, "Method not allowed")
@@ -78,3 +83,5 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 	}
 
 }
+=======
+>>>>>>> c2702ba2 (Sing_in_auth)
