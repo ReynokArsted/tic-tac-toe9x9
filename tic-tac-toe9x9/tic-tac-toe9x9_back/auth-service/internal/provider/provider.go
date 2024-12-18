@@ -31,7 +31,7 @@ func NewProvider(host string, port int, user, password, dbName string) *Provider
             id SERIAL PRIMARY KEY,
             login TEXT NOT NULL,
 			password TEXT NOT NULL,
-			username TEXT NOT NULL
+			username TEXT NOT NULL,
 			win INT NOT NULL,
 			lose INT NOT NULL
         );
