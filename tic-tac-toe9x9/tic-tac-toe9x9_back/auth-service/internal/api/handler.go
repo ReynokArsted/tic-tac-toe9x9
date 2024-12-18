@@ -46,12 +46,6 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 	}
 	// Проверяем, существует ли пользователь в базе данных
 	_, err = srv.uc.GetUserByLogin(user.Login)
-	if err != nil {
-		log.Println("failed to fetch user", err)
-		answer.Error = errors.New("failed to fetch user").Error()
-		return c.JSON(http.StatusInternalServerError, answer)
-	}
-	// Если пользователь не существует, то добавляем его
 	if err == models.ErrUserNotFound {
 		answer, err = srv.uc.AddUser(&user)
 		if err != nil {
@@ -61,6 +55,11 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 		}
 
 		return c.JSON(http.StatusCreated, answer)
+	}
+	if err != nil {
+		log.Println("failed to fetch user", err)
+		answer.Error = errors.New("failed to fetch user").Error()
+		return c.JSON(http.StatusInternalServerError, answer)
 	} else {
 		answer.Error = errors.New("пользователь уже существует, измените логин или войдите").Error()
 		return c.JSON(http.StatusOK, answer)
