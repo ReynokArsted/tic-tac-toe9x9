@@ -20,7 +20,7 @@ func NewUserHandler(provider *provider.Provider) *UserHandler {
 
 // CreateOrUpdateUser обрабатывает запрос на создание или обновление пользователя
 func (srv *Server) SingInHandler(c echo.Context) error {
-	if c.Request().Method != http.MethodPost {
+	if c.Request().Method != http.MethodGet {
 		return c.String(http.StatusMethodNotAllowed, "Method not allowed")
 	}
 	// Распарсиваем JSON-тело запроса
