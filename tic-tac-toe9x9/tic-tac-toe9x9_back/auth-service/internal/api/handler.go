@@ -20,7 +20,7 @@ func NewUserHandler(provider *provider.Provider) *UserHandler {
 
 // CreateOrUpdateUser обрабатывает запрос на создание или обновление пользователя
 func (srv *Server) SingInHandler(c echo.Context) error {
-	if c.Request().Method != http.MethodPost {
+	if c.Request().Method != http.MethodGet {
 		return c.String(http.StatusMethodNotAllowed, "Method not allowed")
 	}
 	// Распарсиваем JSON-тело запроса
@@ -48,6 +48,33 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 		return c.String(http.StatusCreated, "Пользователь "+user.Login+" был успешно добавлен\n")
 	} else {
 		return c.String(http.StatusOK, "Пользователь "+user.Login+" уже добавлен\n")
+	}
+
+}
+func (srv *Server) SingUpHandler(c echo.Context) error {
+	if c.Request().Method != http.MethodGet {
+		return c.String(http.StatusMethodNotAllowed, "Method not allowed")
+	}
+	// Распарсиваем JSON-тело запроса
+	var user models.User
+	err := json.NewDecoder(c.Request().Body).Decode(&user)
+	if err != nil {
+		return c.String(http.StatusBadRequest, "Invalid request body")
+	}
+	if user.Login == "" || user.Password == "" || user.Username == "" {
+		return c.String(http.StatusBadRequest, "Поля не могут быть незаполненными.")
+	}
+	// Проверяем, существует ли пользователь в базе данных
+	existingUser, err := srv.uc.GetUserByLogin(user.Login)
+	if err != nil {
+		log.Println("failed to fetch user", err)
+		return c.String(http.StatusInternalServerError, "failed to fetch user")
+	}
+	// Если пользователь не существует, то добавляем его
+	if existingUser == nil {
+		return c.String(http.StatusCreated, "Пользователь не найден\n")
+	} else {
+		return c.String(http.StatusOK, "login:"+user.Login+";password:"+user.Password+";username:"+user.Username)
 	}
 
 }
