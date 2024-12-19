@@ -9,7 +9,8 @@ export class SignUp extends Component {
         name: "",
         showPasswordKey: false,
         errorKey: null,
-        errorPlace: null
+        errorPlace: null,
+        SignUpError: ""
     }
 
     static contextType = AppContext
@@ -28,47 +29,63 @@ export class SignUp extends Component {
         })
     }
 
-    LogButtonClicked = () => {
+    SignUp = async (userData) => {
+        const {login} = this.context
+        const jsonData = JSON.stringify(userData)
+        try {
+            const response = await fetch('http://localhost:9090/singUp', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+                body: jsonData, 
+            });
+
+            const result = await response.json()
+            if (result.error !== "") {
+                this.setState({SignUpError : result.error})
+            } else {
+                this.setState({SignUpError: ""})
+                login(result) // Функция для обновления контекста
+            }
+            console.log("Ответ от API:", result);
+
+            } catch (error) {
+                console.error("Ошибка:", error);
+            }
+}            
+
+    LogButtonClicked = async () => {
         const {login, password, name} = this.state
-        console.log(`Логин: ${login}`)
-        console.log(`Пароль: ${password}`)
-        console.log(`Имя игрока: ${name}`)
 
         if (login === "" || password === "" || name === "") {
-            this.setState({errorKey: 1})
+            this.setState({errorKey: 1, SignUpError: ""})
             return
         }
 
         if (login.startsWith(" ") === true || login.endsWith(" ") === true) {
-            this.setState({errorKey: 2, errorPlace: "логина"})
+            this.setState({errorKey: 2, errorPlace: "логина", SignUpError: ""})
             return
         }
         if (password.startsWith(" ") === true || password.endsWith(" ") === true) {
-            this.setState({errorKey: 2, errorPlace: "пароля"})
+            this.setState({errorKey: 2, errorPlace: "пароля", SignUpError: ""})
             return
         }
         if (name.startsWith(" ") === true || name.endsWith(" ") === true) {
-            this.setState({errorKey: 2, errorPlace: "имени"})
+            this.setState({errorKey: 2, errorPlace: "имени", SignUpError: ""})
             return
         }
 
-        /*
-        try {
-            const response = await fetch('https://api.example.com/topics')
-            if (!response.ok) {
-                throw new Error("Ошибка загрузки данных")
-            }
-            const result = await response.json()
-            this.setState({
-            
-            })
-        } 
-        catch (error) {
-            this.setState({ 
-
-            })
+        const data = {
+            login: login,
+            password: password,
+            username: name,
+            win: 0,
+            lose: 0,
+            error: ""
         }
-        */
+
+        await this.SignUp(data)
 
         this.setState ({
             login: "",
@@ -76,14 +93,13 @@ export class SignUp extends Component {
             name: "",
             errorKey: 0
         })
-
-        this.context.setName(name)
-        console.log(this.context.Avatar)
-        this.context.login()
     }
 
     render () {
-        const {login, password, name, showPasswordKey, errorKey, errorPlace} = this.state
+        const {
+            login, password, name, 
+            showPasswordKey, errorKey, errorPlace, SignUpError
+        } = this.state
 
         if (this.context.UserIsLoged === true){
             return <Navigate to="/profile" replace/>
@@ -98,8 +114,14 @@ export class SignUp extends Component {
                 </div>
                 <div>
                     <label>пароль</label>
-                    <input type={showPasswordKey ? "text" : "password"} name="password" value={password} onChange={(e) => this.UpdateData(e)}/>
-                    <button onClick={this.ShowPassword}>{showPasswordKey ? "Скрыть" : "Показать"}</button>
+                    <input 
+                    type={showPasswordKey ? "text" : "password"} 
+                    name="password" value={password} 
+                    onChange={(e) => this.UpdateData(e)}
+                    />
+                    <button 
+                    onClick={this.ShowPassword}>{showPasswordKey ? "Скрыть" : "Показать"}
+                    </button>
                 </div>
                 <div>
                     <label>имя игрока/никнейм</label>
@@ -112,6 +134,7 @@ export class SignUp extends Component {
                 Пожалуйста, заполните пустые поля!</p>}
                 {errorKey === 2 && <p>В начале или конце {errorPlace} есть пробелы<br></br>
                 Пожалуйста, напишите без них!</p>}
+                {SignUpError !== "" && <p>Ошибка: {SignUpError}</p>}
             </>
         )
     }

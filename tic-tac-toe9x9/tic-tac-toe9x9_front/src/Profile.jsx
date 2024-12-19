@@ -5,7 +5,7 @@ export class Profile extends Component {
     
     static contextType = AppContext
     render(){
-        const {UserName, UserAvatarForProfile, vinNumber} = this.context
+        const {UserName, UserAvatarForProfile, Wins, Loses} = this.context
         return (
             <>
                 <div>
@@ -14,7 +14,8 @@ export class Profile extends Component {
                 </div>
                 <div>
                     <info>
-                        <p href="#">Количество побед: {vinNumber}</p>
+                        <p href="#">Количество побед: {Wins}</p>
+                        <p href="#">Количество поражений: {Loses}</p>
                         <p>Статус: </p>
                     </info>
                 </div>

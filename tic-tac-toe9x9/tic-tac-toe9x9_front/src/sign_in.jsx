@@ -31,7 +31,6 @@ export class SignIn extends Component {
 
     SignIn = async (userData) => {
         const {login} = this.context
-
         const jsonData = JSON.stringify(userData);
         try {
             const response = await fetch('http://localhost:9090/singIn', {
@@ -47,7 +46,7 @@ export class SignIn extends Component {
                 this.setState({SignInError : result.error})
             } else {
                 this.setState({SignInError: ""})
-                login(result) // Функция для обновление контекста
+                login(result) // Функция для обновления контекста
             }
             //console.log("Ответ от API:", result);
 
