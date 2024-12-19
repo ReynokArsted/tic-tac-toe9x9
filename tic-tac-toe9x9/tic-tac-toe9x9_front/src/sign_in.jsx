@@ -13,8 +13,8 @@ export class SignIn extends Component {
 
     static contextType = AppContext
 
-    UpdateData = (e) => { 
-        const {name, value} = e.target
+    UpdateData = (e) => {
+        const { name, value } = e.target
         this.setState({
             [name]: value,
             errorKey: null
@@ -22,31 +22,49 @@ export class SignIn extends Component {
     }
 
     ShowPassword = () => {
-        this.setState ({
+        this.setState({
             showPasswordKey: !this.state.showPasswordKey
         })
     }
 
     LogButtonClicked = () => {
-        const {login, password} = this.state
+        const { login, password } = this.state
         console.log(`Логин: ${login}`)
         console.log(`Пароль: ${password}`)
 
         if (login === "" || password === "") {
-            this.setState({errorKey: 1})
+            this.setState({ errorKey: 1 })
             return
         }
 
         if (login.startsWith(" ") === true || login.endsWith(" ") === true) {
-            this.setState({errorKey: 2, errorPlace: "логина"})
+            this.setState({ errorKey: 2, errorPlace: "логина" })
             return
         }
         if (password.startsWith(" ") === true || password.endsWith(" ") === true) {
-            this.setState({errorKey: 2, errorPlace: "пароля"})
+            this.setState({ errorKey: 2, errorPlace: "пароля" })
             return
         }
 
-        this.setState ({
+        /*
+        try {
+            const response = await fetch('https://api.example.com/topics')
+            if (!response.ok) {
+                throw new Error("Ошибка загрузки данных")
+            }
+            const result = await response.json()
+            this.setState({
+            
+            })
+        } 
+        catch (error) {
+            this.setState({ 
+
+            })
+        }
+        */
+
+        this.setState({
             login: "",
             password: "",
             errorKey: 0
@@ -55,11 +73,11 @@ export class SignIn extends Component {
         this.context.login()
     }
 
-    render () {
-        const { login, password, showPasswordKey, errorKey, errorPlace} = this.state
+    render() {
+        const { login, password, showPasswordKey, errorKey, errorPlace } = this.state
 
-        if (this.context.UserIsLoged === true){
-            return <Navigate to="/" replace/>
+        if (this.context.UserIsLoged === true) {
+            return <Navigate to="/" replace />
         }
 
         return (
@@ -67,20 +85,20 @@ export class SignIn extends Component {
                 <label>Вход</label>
                 <div>
                     <label>логин</label>
-                    <input name="login" value={login} onChange={(e) => this.UpdateData(e)}/>
+                    <input name="login" value={login} onChange={(e) => this.UpdateData(e)} />
                 </div>
                 <div>
                     <label>пароль</label>
-                    <input type={showPasswordKey ? "text" : "password"} name="password" value={password} onChange={(e) => this.UpdateData(e)}/>
+                    <input type={showPasswordKey ? "text" : "password"} name="password" value={password} onChange={(e) => this.UpdateData(e)} />
                     <button onClick={this.ShowPassword}>{showPasswordKey ? "Скрыть" : "Показать"}</button>
                 </div>
                 <button onClick={this.LogButtonClicked}>Войти</button>
                 <p>Впервые тут? Тогда можно <Link to="/sign_up">зарегистироваться</Link></p>
                 {errorKey === 0 && <p>Вход прошёл успешно!</p>}
                 {errorKey === 1 && <p>Одно или более полей пусты<br></br>
-                Пожалуйста, заполните пустые поля!</p>}
+                    Пожалуйста, заполните пустые поля!</p>}
                 {errorKey === 2 && <p>В начале или конце {errorPlace} есть пробелы<br></br>
-                Пожалуйста, напишите без них!</p>}
+                    Пожалуйста, напишите без них!</p>}
             </>
         )
     }

@@ -52,6 +52,24 @@ export class SignUp extends Component {
             return
         }
 
+        /*
+        try {
+            const response = await fetch('https://api.example.com/topics')
+            if (!response.ok) {
+                throw new Error("Ошибка загрузки данных")
+            }
+            const result = await response.json()
+            this.setState({
+            
+            })
+        } 
+        catch (error) {
+            this.setState({ 
+
+            })
+        }
+        */
+
         this.setState ({
             login: "",
             password: "",

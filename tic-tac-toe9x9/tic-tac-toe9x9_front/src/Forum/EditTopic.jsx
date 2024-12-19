@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Topics } from "../Topics";
+import { Topics } from "./Topics"
 
 export class EditTopic extends Component {
     state = {
