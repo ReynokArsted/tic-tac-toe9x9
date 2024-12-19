@@ -1,52 +1,56 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
-//import { AppContext } from "../Context";
 import { Topics } from "./Topics";
-//import { da } from "date-fns/locale";
 
 export class Forum extends Component {
     state = {
-        TopicsList: 
-        [
-            {id : 1, name: 'first topic', data: '14.12.2024'},
-            {id : 2, name: 'second topic', data: '14.12.2024'}
-        ],
+        Posts: [],
+        Total: 0,
+        PageSize: 0,
+        Page: 1,
         Loading: false,
-        Error: null
+        Error: ""
     }
 
-    //componentDidMount() {
-        /*
-        fetchData = async () => {
-            try {
-                const response = await fetch('https://api.example.com/list')
-                if (!response.ok) {
-                    throw new Error("Ошибка загрузки данных")
-                }
-                const result = await response.json()
-                this.setState({ 
-                    Topics: result, 
-                    Loading: false 
-                });
-            } 
-            catch (error) {
-                this.setState({ 
-                    Error: error.message, 
-                    Loading: false 
+    fetchData = async () => {
+        const {Page} = this.state
+        try {
+            const response = await fetch(`http://localhost:9091/getPosts?page=${Page}`, {
+                method: 'GET', 
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+            })
+            const result = await response.json()
+            if (result.error !== "") {
+                this.setState({Error : result.error})
+            } else {
+                this.setState({
+                    Posts: result.posts,
+                    Total: result.total,
+                    PageSize: result.page_size,
+                    Page: result.page,
+                    Error: ""
                 })
             }
-        }
-        */
-    //}
+            console.log("Ответ от API:", result);
+            } catch (error) {
+                console.error("Ошибка:", error);
+            }
+    }
+
+    componentDidMount() {
+        this.fetchData()
+    }
 
     render() {
-        const {TopicsList, Loading, Error} = this.state;
+        const {Posts, Loading, Error} = this.state;
 
-        if (Loading) {
+        if (Loading === true) {
             return <p>Загрузка...</p>;
         }
 
-        if (Error) {
+        if (Error !== "") {
             return <p>Ошибка: {Error}</p>;
         }
 
@@ -56,7 +60,7 @@ export class Forum extends Component {
                 <Link to="/new_topic"><button>Создать новое обсуждение</button></Link>
                 <Link to="/edit_topic"><button>Редактировать созданные обсуждения</button></Link>
                 <div className="list">
-                <Topics data={TopicsList}/>
+                <Topics data={Posts}/>
                 </div>
             </>
         );

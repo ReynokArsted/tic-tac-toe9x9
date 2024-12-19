@@ -29,7 +29,7 @@ func NewProvider(host string, port int, user, password, dbName string) *Provider
 	_, err = UserDB.Exec(`
         CREATE TABLE IF NOT EXISTS registred_users (
             id SERIAL PRIMARY KEY,
-            login TEXT NOT NULL,
+            login TEXT NOT NULL UNIQUE,
 			password TEXT NOT NULL,
 			username TEXT NOT NULL,
 			win INT NOT NULL,
