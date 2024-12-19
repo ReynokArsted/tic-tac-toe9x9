@@ -29,7 +29,7 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 		Lose:     0,
 		Error:    "",
 	}
-	if c.Request().Method != http.MethodGet {
+	if c.Request().Method != http.MethodPost {
 		answer.Error = errors.New("method not allowed").Error()
 		return c.JSON(http.StatusMethodNotAllowed, answer)
 	}
@@ -76,7 +76,7 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 		Lose:     0,
 		Error:    "",
 	}
-	if c.Request().Method != http.MethodGet {
+	if c.Request().Method != http.MethodPost {
 		answer.Error = errors.New("method not allowed").Error()
 		return c.JSON(http.StatusMethodNotAllowed, answer)
 	}
