@@ -18,8 +18,8 @@ func NewServer(ip string, port int, uc Usecase) *Server {
 		Address: fmt.Sprintf("%s:%d", ip, port),
 		uc:      uc,
 	}
-	srv.Server.GET("/singIn", srv.SingInHandler)
-	srv.Server.GET("/singUp", srv.SingUpHandler)
+	srv.Server.POST("/singIn", srv.SingInHandler)
+	srv.Server.POST("/singUp", srv.SingUpHandler)
 
 	return srv
 }
