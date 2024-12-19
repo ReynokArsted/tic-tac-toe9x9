@@ -19,6 +19,7 @@ func NewServer(ip string, port int, uc Usecase) *Server {
 		uc:      uc,
 	}
 	srv.Server.POST("/createPost", srv.createPostHandler)
+	srv.Server.POST("/createComment", srv.createCommentHandler)
 
 	return srv
 }
