@@ -15,6 +15,10 @@ func (u Usecase) CountOfPosts() (int, error) {
 	return u.p.CountOfPosts()
 }
 
-func (u Usecase) GetPosts(page int) (models.AnswerPage, error) {
+func (u Usecase) GetPosts(page int) (models.AnswerPagePosts, error) {
 	return u.p.GetPosts(page)
+}
+
+func (u Usecase) GetComments(page, post_id int) (models.AnswerPageComments, error) {
+	return u.p.GetComments(page, post_id)
 }

@@ -28,10 +28,18 @@ type AnswerGetCountOfPosts struct {
 	Error string `json:"error"`
 }
 
-type AnswerPage struct {
+type AnswerPagePosts struct {
 	Posts    []Post `json:"posts"`
 	Total    int    `json:"total"`
 	PageSize int    `json:"page_size"`
 	Page     int    `json:"page"`
 	Error    string `json:"error"`
+}
+
+type AnswerPageComments struct {
+	Comments []Comment `json:"posts"`
+	Total    int       `json:"total"`
+	PageSize int       `json:"page_size"`
+	Page     int       `json:"page"`
+	Error    string    `json:"error"`
 }

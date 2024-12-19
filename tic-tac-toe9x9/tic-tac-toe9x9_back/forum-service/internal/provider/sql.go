@@ -29,13 +29,13 @@ func (p *Provider) AddComment(comment models.Comment) (int, error) {
 	return id, err
 }
 
-func (p *Provider) GetPosts(page int) (models.AnswerPage, error) {
+func (p *Provider) GetPosts(page int) (models.AnswerPagePosts, error) {
 	var posts []models.Post
 	offset := (page - 1) * 10
 	query := "SELECT id, title, content, author FROM posts LIMIT $1 OFFSET $2"
 	rows, err := p.UserDB.Query(query, 10, offset)
 	if err != nil {
-		return models.AnswerPage{}, err
+		return models.AnswerPagePosts{}, err
 	}
 	defer rows.Close()
 
@@ -43,31 +43,84 @@ func (p *Provider) GetPosts(page int) (models.AnswerPage, error) {
 		var post models.Post
 		err := rows.Scan(&post.Id, &post.Title, &post.Content, &post.Author)
 		if err != nil {
-			return models.AnswerPage{}, err
+			return models.AnswerPagePosts{}, err
 		}
 		posts = append(posts, post)
 	}
 
 	if err := rows.Err(); err != nil {
-		return models.AnswerPage{}, errors.New("ошибка при сканировании строк: " + err.Error())
+		return models.AnswerPagePosts{}, errors.New("ошибка при сканировании строк: " + err.Error())
 	}
 
 	total, err := p.CountOfPosts()
 	if err != nil {
-		return models.AnswerPage{}, errors.New("ошибка при получении количества записей: " + err.Error())
+		return models.AnswerPagePosts{}, errors.New("ошибка при получении количества записей: " + err.Error())
 	}
 	if total < offset*10 {
-		return models.AnswerPage{
+		return models.AnswerPagePosts{
 			Posts:    posts,
 			Total:    total,
 			PageSize: len(posts),
 			Page:     page,
 		}, errors.New("пустая страница")
 	}
-	return models.AnswerPage{
+	return models.AnswerPagePosts{
 		Posts:    posts,
 		Total:    total,
 		PageSize: len(posts),
+		Page:     page,
+	}, nil
+}
+
+func (p *Provider) CountOfComments(post_id int) (int, error) {
+	var count int
+	query := "SELECT COUNT(*) FROM comments WHERE post_id = $1"
+	err := p.UserDB.QueryRow(query, post_id).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func (p *Provider) GetComments(page, post_id int) (models.AnswerPageComments, error) {
+	var comments []models.Comment
+	offset := (page - 1) * 10
+	query := "SELECT post_id,  author, content FROM comments WHERE post_id = $3 LIMIT $1 OFFSET $2"
+	rows, err := p.UserDB.Query(query, 10, offset, post_id)
+	if err != nil {
+		return models.AnswerPageComments{}, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var comment models.Comment
+		err := rows.Scan(&comment.Post_id, &comment.Author, &comment.Content)
+		if err != nil {
+			return models.AnswerPageComments{}, err
+		}
+		comments = append(comments, comment)
+	}
+
+	if err := rows.Err(); err != nil {
+		return models.AnswerPageComments{}, errors.New("ошибка при сканировании строк: " + err.Error())
+	}
+
+	total, err := p.CountOfComments(post_id)
+	if err != nil {
+		return models.AnswerPageComments{}, errors.New("ошибка при получении количества записей: " + err.Error())
+	}
+	if total < offset*10 {
+		return models.AnswerPageComments{
+			Comments: comments,
+			Total:    total,
+			PageSize: len(comments),
+			Page:     page,
+		}, errors.New("пустая страница")
+	}
+	return models.AnswerPageComments{
+		Comments: comments,
+		Total:    total,
+		PageSize: len(comments),
 		Page:     page,
 	}, nil
 }
