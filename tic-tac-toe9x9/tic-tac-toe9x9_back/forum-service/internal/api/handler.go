@@ -68,7 +68,7 @@ func (srv *Server) createCommentHandler(c echo.Context) error {
 }
 
 func (srv *Server) getPostsHandler(c echo.Context) error {
-	var answer models.AnswerPage
+	var answer models.AnswerPagePosts
 	queryParams := c.QueryParams()
 	page, err := strconv.Atoi(queryParams.Get("page"))
 	if err != nil {
@@ -87,6 +87,27 @@ func (srv *Server) getCountOfPostsHandler(c echo.Context) error {
 	var answer models.AnswerGetCountOfPosts
 	id, err := srv.uc.CountOfPosts()
 	answer.Count = id
+	if err != nil {
+		answer.Error = err.Error()
+		return c.JSON(http.StatusInternalServerError, answer)
+	}
+	return c.JSON(http.StatusOK, answer)
+}
+
+func (srv *Server) getCommentsHandler(c echo.Context) error {
+	var answer models.AnswerPageComments
+	queryParams := c.QueryParams()
+	page, err := strconv.Atoi(queryParams.Get("page"))
+	if err != nil {
+		answer.Error = err.Error()
+		c.JSON(http.StatusBadRequest, answer)
+	}
+	post_id, err := strconv.Atoi(queryParams.Get("post_id"))
+	if err != nil {
+		answer.Error = err.Error()
+		c.JSON(http.StatusBadRequest, answer)
+	}
+	answer, err = srv.uc.GetComments(page, post_id)
 	if err != nil {
 		answer.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, answer)
