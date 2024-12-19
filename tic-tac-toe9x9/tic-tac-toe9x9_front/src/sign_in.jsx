@@ -2,13 +2,15 @@ import { Component } from "react";
 import { AppContext } from "./Context";
 import { Link, Navigate } from "react-router-dom";
 
+
 export class SignIn extends Component {
     state = {
         login: "",
         password: "",
         showPasswordKey: false,
         errorKey: null,
-        errorPlace: null
+        errorPlace: null,
+        SignInError: ""
     }
 
     static contextType = AppContext
@@ -27,54 +29,71 @@ export class SignIn extends Component {
         })
     }
 
-    LogButtonClicked = () => {
+    SignIn = async (userData) => {
+        const {login} = this.context
+
+        const jsonData = JSON.stringify(userData);
+        try {
+            const response = await fetch('http://localhost:9090/singIn', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+                body: jsonData, 
+            });
+
+            const result = await response.json()
+            if (result.error !== "") {
+                this.setState({SignInError : result.error})
+            } else {
+                this.setState({SignInError: ""})
+                login(result) // Функция для обновление контекста
+            }
+            //console.log("Ответ от API:", result);
+
+            } catch (error) {
+                console.error("Ошибка:", error);
+            }
+}            
+
+    LogButtonClicked = async () => {
         const { login, password } = this.state
-        console.log(`Логин: ${login}`)
-        console.log(`Пароль: ${password}`)
 
         if (login === "" || password === "") {
-            this.setState({ errorKey: 1 })
+            this.setState({ errorKey: 1, SignInError: "" })
             return
         }
 
         if (login.startsWith(" ") === true || login.endsWith(" ") === true) {
-            this.setState({ errorKey: 2, errorPlace: "логина" })
+            this.setState({ errorKey: 2, errorPlace: "логина", SignInError: ""})
             return
         }
         if (password.startsWith(" ") === true || password.endsWith(" ") === true) {
-            this.setState({ errorKey: 2, errorPlace: "пароля" })
+            this.setState({ errorKey: 2, errorPlace: "пароля", SignInError: ""})
             return
         }
 
-        /*
-        try {
-            const response = await fetch('https://api.example.com/topics')
-            if (!response.ok) {
-                throw new Error("Ошибка загрузки данных")
-            }
-            const result = await response.json()
-            this.setState({
-            
-            })
-        } 
-        catch (error) {
-            this.setState({ 
-
-            })
+        const data = {
+            login: login,
+            password: password,
+            username: "",
+            win: 0,
+            lose: 0,
+            error: ""
         }
-        */
+
+        await this.SignIn(data)
 
         this.setState({
             login: "",
             password: "",
-            errorKey: 0
+            errorKey: 0,
+            errorPlace: 0
         })
-
-        this.context.login()
     }
 
     render() {
-        const { login, password, showPasswordKey, errorKey, errorPlace } = this.state
+        const { login, password, showPasswordKey, errorKey, errorPlace, SignInError } = this.state
 
         if (this.context.UserIsLoged === true) {
             return <Navigate to="/" replace />
@@ -94,11 +113,11 @@ export class SignIn extends Component {
                 </div>
                 <button onClick={this.LogButtonClicked}>Войти</button>
                 <p>Впервые тут? Тогда можно <Link to="/sign_up">зарегистироваться</Link></p>
-                {errorKey === 0 && <p>Вход прошёл успешно!</p>}
                 {errorKey === 1 && <p>Одно или более полей пусты<br></br>
                     Пожалуйста, заполните пустые поля!</p>}
                 {errorKey === 2 && <p>В начале или конце {errorPlace} есть пробелы<br></br>
                     Пожалуйста, напишите без них!</p>}
+                {SignInError !== "" && <p>Ошибка: {SignInError}</p>}
             </>
         )
     }

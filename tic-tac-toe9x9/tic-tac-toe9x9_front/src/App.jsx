@@ -66,23 +66,42 @@ const router = createBrowserRouter([
 
 function App() {
   const [UserIsLoged, setUserIsLoged] = useState(false)
-  const [UserName, setUserName] = useState("nameless")
+  const [Login, setUserLogin] = useState("")
+  const [UserName, setUserName] = useState("")
+  const [Password, setUserPassword] = useState("")
   const [UserAvatarForPanel, setUserAvatarForPanel] = useState(AvatarForPanel)
   const [UserAvatarForProfile, setUserAvatarForProfile] = useState(AvatarForProfile)
-  const [vinNumber, setVinNumber] = useState(0)
-  //const [Posts, setUserPosts] = useState(null)
+  const [Wins, setWinsNumber] = useState(0)
+  const [Loses, setLosesNumber] = useState(0)
 
-  const login = () => {
+  const login = (data) => {
     setUserIsLoged(true)
-
+    setLogin(data.login)
+    setName(data.username)
+    setPassword(data.password)
+    setWins(data.win)
+    setLoses(data.lose)
   }
 
   const logout = () => {
     setUserIsLoged(false)
+    setLogin("")
+    setName("")
+    setPassword("")
+    setWins(0)
+    setLoses(0)
+  }
+
+  const setLogin = (userlogin) => {
+    setUserLogin(userlogin)
   }
 
   const setName = (name) => {
     setUserName(name)
+  }
+
+  const setPassword = (pass) => {
+    setUserPassword(pass)
   }
 
   const setAvatar = (path) => { // Как сохранить аватар, который загружает пользователь?
@@ -90,16 +109,21 @@ function App() {
     setUserAvatarForProfile(path)
   }
 
-  const setVins = (number) => {
-    setVinNumber(number)
+  const setWins = (number) => {
+    setWinsNumber(number)
   }
 
-  //const setPosts = (list) => {
-  //  setUserPosts(list)
-  //}
+  const setLoses = (number) => {
+    setLosesNumber(number)
+  }
 
   return (
-  <AppContext.Provider value={{UserIsLoged, UserName, UserAvatarForPanel, UserAvatarForProfile, vinNumber, login, logout, setName, setAvatar, setVins}}>
+  <AppContext.Provider value={
+    {UserIsLoged, Login, UserName, Password, UserAvatarForPanel, 
+    UserAvatarForProfile, Wins, Loses, login, 
+    logout, setName, setLogin, setPassword, setAvatar, 
+    setWins, setLoses 
+    }}>
     <div className="App">
       <RouterProvider router={router}></RouterProvider>
     </div>
