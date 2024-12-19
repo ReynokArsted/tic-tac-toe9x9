@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
 //import { AppContext } from "../Context";
-import { Topics } from "../Topics";
+import { Topics } from "./Topics";
 //import { da } from "date-fns/locale";
 
 export class Forum extends Component {
