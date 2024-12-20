@@ -42,6 +42,7 @@ export class SignUp extends Component {
             });
 
             const token = response.headers.get("X-JWT-Token");
+            console.log(token)
 
             const result = await response.json()
             if (result.error !== "") {
