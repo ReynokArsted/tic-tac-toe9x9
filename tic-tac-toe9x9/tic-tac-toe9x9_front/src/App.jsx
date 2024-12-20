@@ -5,7 +5,7 @@ import { Panel } from "./Panel";
 import { MainPage } from "./main_page";
 import { SignUp } from './sign_up';
 import { SignIn } from './sign_in';
-import { AppContext } from './Context';
+import { AppContext, PostContext } from './Context';
 import { useState } from 'react';
 import { Profile } from './Profile';
 import { Board } from './Game';
@@ -65,6 +65,7 @@ const router = createBrowserRouter([
 ])
 
 function App() {
+  // AppContext
   const [UserIsLoged, setUserIsLoged] = useState(false)
   const [Login, setUserLogin] = useState("")
   const [UserName, setUserName] = useState("")
@@ -73,6 +74,13 @@ function App() {
   const [UserAvatarForProfile, setUserAvatarForProfile] = useState(AvatarForProfile)
   const [Wins, setWinsNumber] = useState(0)
   const [Loses, setLosesNumber] = useState(0)
+  const [UserToken, setUserToken] = useState("")
+
+  // PostContext
+  const [PostTitle, setPostTitle] = useState("")
+  const [PostContent, setPostContent] = useState("")
+  const [PostAuthor, setPostAuthor] = useState("")
+  const [PostID, setPostID] = useState("")
 
   const login = (data) => {
     setUserIsLoged(true)
@@ -90,6 +98,7 @@ function App() {
     setPassword("")
     setWins(0)
     setLoses(0)
+    setToken("")
   }
 
   const setLogin = (userlogin) => {
@@ -117,16 +126,39 @@ function App() {
     setLosesNumber(number)
   }
 
+  const setToken = (token) => {
+    setUserToken(token)
+  }
+
+  const setTitle = (title) => {
+    setPostTitle(title)
+  }
+
+  const setContent = (content) => {
+    setPostContent(content)
+  }
+
+  const setAuthor = (author) => {
+    setPostAuthor(author)
+  }
+
+  const setPosID = (id) => {
+    setPostID(id)
+  }
+
   return (
   <AppContext.Provider value={
     {UserIsLoged, Login, UserName, Password, UserAvatarForPanel, 
-    UserAvatarForProfile, Wins, Loses, login, 
+    UserAvatarForProfile, Wins, Loses, UserToken, login, 
     logout, setName, setLogin, setPassword, setAvatar, 
-    setWins, setLoses 
+    setWins, setLoses, setToken 
     }}>
-    <div className="App">
-      <RouterProvider router={router}></RouterProvider>
-    </div>
+      <PostContext.Provider value={{PostTitle, PostContent, PostAuthor, PostID,
+        setTitle, setContent, setAuthor, setPosID}}>
+        <div className="App">
+          <RouterProvider router={router}></RouterProvider>
+        </div>
+      </PostContext.Provider>
   </AppContext.Provider>
   )
 }

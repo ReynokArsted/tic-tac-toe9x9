@@ -1,56 +1,45 @@
 import { Component } from "react";
 import { Comments } from "./Comments";
-import { useLocation } from "react-router-dom";
+import { PostContext } from "../Context";
+import { Link } from "react-router-dom";
 
 export class TopicDis extends Component {
     state = {
-        // text: [],
-        Text: "текст",
+        ID: "",
+        Title: "",
+        Content: "",
+        Author: "",
+        Error: "",
         Loading: false,
-        Error: null,
-        ID: null,
-        //name: null
-        Name: "Какая-то тема",
-        CommentsList: [
-            {id: 1, text: 'hello', author: 'fss'},
-            {id: 2, text: 'gsg', author: 'fss'}
-        ]
+        CommentsList: []
     }
+
+    static contextType = PostContext
 
     componentDidMount() {
-        //const Location = useLocation()
-        //const {}
-        //this.fetchData()
+        this.updateData()
     }
-    fetchData = async () => {
-        //const Location = useLocation()
-        //const {id, name} = Location.state
-        /*
-        try {
-            const response = await fetch('https://api.example.com/text');
-            if (!response.ok) {
-                throw new Error("Ошибка загрузки данных")
-            }
-            const result = await response.json()
-            this.setState({ 
-                data: result, 
-                loading: false,
-                id: id,
-                name: name
-            })
-        } 
-        catch (error) {
-            this.setState({ 
-                error: error.message, 
-                loading: false 
-            })
-        }
-        */
+
+    componentWillUnmount() {
+        const {setPosID, setTitle, setContent, setAuthor} = this.context
+        setPosID("")
+        setTitle("")
+        setContent("")
+        setAuthor("")
     }
-    
+
+    updateData = () => {
+            console.log(this.context)
+            this.setState({
+                ID: this.context.PostID,
+                Title: this.context.PostTitle,
+                Author: this.context.PostAuthor,
+                Content: this.context.PostContent,
+            })
+    }
 
     render() {
-        const {Text, Loading, Error, Name, CommentsList} = this.state;
+            const {Content, Loading, Error, Title, Author, CommentsList} = this.state;
 
         if (Loading) {
             return <p>Загрузка...</p>;
@@ -62,12 +51,16 @@ export class TopicDis extends Component {
 
         return (
             <>
-                <h1>{Name}</h1>
+                <h1>{Title}</h1>
                 <div className="text">
-                    {Text}
+                    {Content}
+                </div>
+                <div>
+                    {Author}
                 </div>
                 <button>Добавить коментарий</button>
                 <Comments data={CommentsList}/>
+                <Link to="/forum"><button>Назад</button></Link>
             </>
         )
     }
