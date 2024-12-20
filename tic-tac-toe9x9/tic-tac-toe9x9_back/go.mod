@@ -3,6 +3,7 @@ module ReynokArsted/tic-tac-toe9x9
 go 1.22.2
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/labstack/echo/v4 v4.13.2
 	github.com/lib/pq v1.10.9
 	gopkg.in/yaml.v3 v3.0.1
