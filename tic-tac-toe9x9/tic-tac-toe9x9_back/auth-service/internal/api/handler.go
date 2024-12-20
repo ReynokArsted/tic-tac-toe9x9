@@ -21,7 +21,6 @@ func NewUserHandler(provider *provider.Provider) *UserHandler {
 
 // CreateOrUpdateUser обрабатывает запрос на создание или обновление пользователя
 func (srv *Server) SingUpHandler(c echo.Context) error {
-	c.Response().Header().Set("X-JWT-Token", "NoJWT")
 	answer := models.Answer{
 		Login:    "",
 		Username: "",
@@ -29,6 +28,7 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 		Win:      0,
 		Lose:     0,
 		Error:    "",
+		JWTtoken: "NoToken",
 	}
 	if c.Request().Method != http.MethodPost {
 		answer.Error = errors.New("method not allowed").Error()
@@ -59,6 +59,7 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 			answer.Error = errors.New("can't geterate JWTKey").Error()
 			return c.JSON(http.StatusInternalServerError, models.Answer{})
 		}
+		answer.JWTtoken = JWT
 		c.Response().Header().Set("X-JWT-Token", JWT)
 
 		return c.JSON(http.StatusCreated, answer)
@@ -83,6 +84,7 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 		Win:      0,
 		Lose:     0,
 		Error:    "",
+		JWTtoken: "NoToken",
 	}
 	if c.Request().Method != http.MethodPost {
 		answer.Error = errors.New("method not allowed").Error()
@@ -125,6 +127,7 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 		answer.Username = foundedUser.Username
 		answer.Win = foundedUser.Win
 		answer.Lose = foundedUser.Lose
+		answer.JWTtoken = JWT
 		c.Response().Header().Set("X-JWT-Token", JWT)
 		return c.JSON(http.StatusOK, answer)
 	}
