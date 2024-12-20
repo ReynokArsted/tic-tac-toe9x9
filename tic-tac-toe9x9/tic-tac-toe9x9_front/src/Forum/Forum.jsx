@@ -11,7 +11,6 @@ export class Forum extends Component {
         Page: 1,
         Loading: false,
         Error: "",
-        PageState: "showPosts"
     }
 
     static contextType = AppContext
@@ -61,7 +60,7 @@ export class Forum extends Component {
         return (
             <>
                 <h1>Темы для обсуждений</h1>
-                {this.context.UserIsLoged = true && 
+                {this.context.UserIsLoged === true && 
                 <>
                 <Link to="/new_topic"><button>Создать новое обсуждение</button></Link>
                 <Link to="/edit_topic"><button>Редактировать созданные обсуждения</button></Link>

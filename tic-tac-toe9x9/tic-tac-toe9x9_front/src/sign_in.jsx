@@ -30,7 +30,7 @@ export class SignIn extends Component {
     }
 
     SignIn = async (userData) => {
-        const {login, setToken} = this.context
+        const {login, setToken, UserToken} = this.context
         const jsonData = JSON.stringify(userData);
         try {
             const response = await fetch('http://localhost:9090/singIn', {
@@ -42,6 +42,7 @@ export class SignIn extends Component {
             });
 
             const token = response.headers.get("X-JWT-Token");
+            console.log(token)
 
             const result = await response.json()
             if (result.error !== "") {
@@ -52,6 +53,7 @@ export class SignIn extends Component {
                 setToken(token)
             }
             console.log("Ответ от API:", result);
+            console.log(UserToken)
 
             } catch (error) {
                 console.error("Ошибка:", error);

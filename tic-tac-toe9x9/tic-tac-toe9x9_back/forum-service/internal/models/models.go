@@ -39,7 +39,7 @@ type AnswerPagePosts struct {
 }
 
 type AnswerPageComments struct {
-	Comments []Comment `json:"posts"`
+	Comments []Comment `json:"comments"`
 	Total    int       `json:"total"`
 	PageSize int       `json:"page_size"`
 	Page     int       `json:"page"`

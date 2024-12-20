@@ -25,7 +25,8 @@ export class NewTopic extends Component {
             const response = await fetch("http://localhost:9091/createPost", {
                 method: 'POST', 
                 headers: {
-                    'Content-Type': 'application/json', 
+                    'Content-Type' : 'application/json',
+                    'X-JWT-Token' : `${this.context.UserToken}`
                 },
                 body: jsonData
             })

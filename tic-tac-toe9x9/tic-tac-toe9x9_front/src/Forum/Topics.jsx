@@ -4,7 +4,6 @@ import { PostContext } from "../Context";
 
 export class Topic extends Component {
     static contextType = PostContext
-    //const {setPostTitle, setPostContent, setPostAuthor} = this.content
 
     setPostContext = (title, content, author, id) => {
         this.context.setTitle(title)
@@ -14,7 +13,7 @@ export class Topic extends Component {
     }
     render() {
         const {topic} = this.props
-        console.log(topic.content)
+        //console.log(topic.content)
 
         return ( 
         <>
