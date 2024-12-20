@@ -53,6 +53,12 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 			log.Println("failed to create user", err)
 			return c.JSON(http.StatusInternalServerError, answer)
 		}
+		JWT, err := srv.uc.GenerateJWT(answer.Login)
+		if err != nil {
+			answer.Error = errors.New("can't geterate JWTKey").Error()
+			return c.JSON(http.StatusInternalServerError, models.Answer{})
+		}
+		answer.JWTKey = JWT
 
 		return c.JSON(http.StatusCreated, answer)
 	}
@@ -75,6 +81,7 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 		Win:      0,
 		Lose:     0,
 		Error:    "",
+		JWTKey:   "",
 	}
 	if c.Request().Method != http.MethodPost {
 		answer.Error = errors.New("method not allowed").Error()
@@ -107,11 +114,17 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 			return c.JSON(http.StatusBadRequest, answer)
 		}
 	} else {
+		JWT, err := srv.uc.GenerateJWT(foundedUser.Login)
+		if err != nil {
+			answer.Error = errors.New("can't geterate JWTKey").Error()
+			return c.JSON(http.StatusInternalServerError, answer)
+		}
 		answer.Login = foundedUser.Login
 		answer.Password = foundedUser.Password
 		answer.Username = foundedUser.Username
 		answer.Win = foundedUser.Win
 		answer.Lose = foundedUser.Lose
+		answer.JWTKey = JWT
 		return c.JSON(http.StatusOK, answer)
 	}
 	return c.JSON(http.StatusInternalServerError, answer)

@@ -6,4 +6,5 @@ type Provider interface {
 	GetUserByLogin(string) (models.Answer, error)
 	AddUser(user *models.User) (models.Answer, error)
 	CheckPassword(login, password string) (models.Answer, error)
+	GenerateJWT(string) (string, error)
 }

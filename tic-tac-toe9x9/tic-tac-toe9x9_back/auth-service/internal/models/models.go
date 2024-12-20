@@ -1,6 +1,10 @@
 package models
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/golang-jwt/jwt/v5"
+)
 
 type User struct {
 	ID       int    `json:"id"`
@@ -18,6 +22,12 @@ type Answer struct {
 	Win      int    `json:"win"`
 	Lose     int    `json:"lose"`
 	Error    string `json:"error"`
+	JWTKey   string `json:"jwtkey"`
+}
+
+type Claims struct {
+	UserName string `json:"login"`
+	jwt.RegisteredClaims
 }
 
 var (

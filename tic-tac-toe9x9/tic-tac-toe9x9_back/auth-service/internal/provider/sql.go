@@ -4,6 +4,9 @@ import (
 	"ReynokArsted/tic-tac-toe9x9/auth-service/internal/models"
 	"database/sql"
 	"fmt"
+	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // поиск пользователя по логину
@@ -57,4 +60,22 @@ func (p *Provider) CheckPassword(login, password string) (models.Answer, error) 
 		return answer, models.ErrWrongPassword
 	}
 	return answer, nil
+}
+
+func (p *Provider) GenerateJWT(login string) (string, error) {
+	claims := models.Claims{
+		UserName: login,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 30)), // Истекает через 30 минут
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			Issuer:    "auth-server",
+		},
+	}
+	var jwtKey = []byte("verySecretKeyNobodyCan'tKnowThisAHAHAHAHAHAHA")
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
 }

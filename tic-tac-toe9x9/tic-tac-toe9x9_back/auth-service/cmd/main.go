@@ -23,4 +23,5 @@ func main() {
 	uc := usecase.NewUsecase(prv)
 	srv := api.NewServer(cfg.IP, cfg.Port, uc)
 	srv.Run()
+
 }
