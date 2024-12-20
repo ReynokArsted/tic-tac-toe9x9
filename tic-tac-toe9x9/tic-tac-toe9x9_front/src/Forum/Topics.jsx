@@ -8,11 +8,11 @@ export class Topic extends Component {
         <div className="topic">
             <Link to={{
                 pathname: "/topic",
-                state : {id: topic.id, name: topic.name}
+                state : {id: topic.id, name: topic.title, author: topic.login, content: topic.content}
             }}>
-                {topic.name}
+                {topic.title}
             </Link>
-            <p>Тема ...</p>
+            <p>{topic.login}</p>
         </div>
         );
     }
@@ -22,13 +22,13 @@ export class Topics extends Component {
     render() {
         const {data} = this.props
         if (!Array.isArray(data)) {
-            return <p>Нет доступных тем.</p>;
+            return <p>Нет доступных тем</p>;
         }
         return (
             <>
                 <div className="list">
                 {data.map((topic) => (
-                    <Topic key={topic.id} topic={topic} />
+                    <Topic key={topic.id} topic={topic}/>
                 ))}
                 </div>
             </>

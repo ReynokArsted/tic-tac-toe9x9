@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { Comments } from "./Comments";
+import { useLocation } from "react-router-dom";
 
 export class TopicDis extends Component {
     state = {
@@ -17,7 +18,9 @@ export class TopicDis extends Component {
     }
 
     componentDidMount() {
-        this.fetchData()
+        //const Location = useLocation()
+        //const {}
+        //this.fetchData()
     }
     fetchData = async () => {
         //const Location = useLocation()
