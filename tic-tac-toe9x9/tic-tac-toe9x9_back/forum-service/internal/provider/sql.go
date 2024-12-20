@@ -3,6 +3,9 @@ package provider
 import (
 	"ReynokArsted/tic-tac-toe9x9/forum-service/internal/models"
 	"errors"
+	"fmt"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func (p *Provider) AddPost(post models.Post) (int, error) {
@@ -123,4 +126,22 @@ func (p *Provider) GetComments(page, post_id int) (models.AnswerPageComments, er
 		PageSize: len(comments),
 		Page:     page,
 	}, nil
+}
+
+func (p *Provider) ValidationJWT(token_string string) (*models.Claims, error) {
+	claims := &models.Claims{}
+	token, err := jwt.ParseWithClaims(token_string, claims, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("ошибка при верификации токена %w", jwt.ErrTokenSignatureInvalid)
+		}
+		return models.JwtKey, nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("ошибка при верификации токена %w", err)
+	}
+
+	if !token.Valid {
+		return nil, fmt.Errorf("токен не действителен %w", jwt.ErrTokenSignatureInvalid)
+	}
+	return claims, nil
 }

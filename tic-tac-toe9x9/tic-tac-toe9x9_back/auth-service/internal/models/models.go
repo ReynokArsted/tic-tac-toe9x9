@@ -22,7 +22,6 @@ type Answer struct {
 	Win      int    `json:"win"`
 	Lose     int    `json:"lose"`
 	Error    string `json:"error"`
-	JWTKey   string `json:"jwtkey"`
 }
 
 type Claims struct {
@@ -33,4 +32,5 @@ type Claims struct {
 var (
 	ErrWrongPassword = errors.New("введен неверный логин/пароль")
 	ErrUserNotFound  = errors.New("пользователь не найден")
+	JwtKey           = []byte("verySecretKeyNobodyCan'tKnowThisAHAHAHAHAHAHA")
 )

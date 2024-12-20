@@ -3,6 +3,7 @@ package api
 import (
 	"ReynokArsted/tic-tac-toe9x9/forum-service/internal/models"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -18,7 +19,18 @@ func (srv *Server) createPostHandler(c echo.Context) error {
 		post models.Post
 	)
 	answer := models.AnswerPost{Post_id: -1}
-	err := json.NewDecoder(c.Request().Body).Decode(&post)
+	authHeader := c.Request().Header.Get("Authorization")
+	if authHeader == "" || len(authHeader) < 8 {
+		answer.Error = "необходимо предоставить заголовок авторизации"
+		return c.JSON(http.StatusUnauthorized, answer)
+	}
+	tokenString := authHeader[7:]                    // Извлекаем токен из заголовка "Bearer <token>"
+	claims, err := srv.uc.ValidationJWT(tokenString) // проверяем токен
+	if err != nil {
+		answer.Error = "невозможно верифицировать токен " + err.Error()
+		return c.JSON(http.StatusUnauthorized, answer)
+	}
+	err = json.NewDecoder(c.Request().Body).Decode(&post)
 	if err != nil {
 		answer.Error = "invalid request body"
 		return c.JSON(http.StatusBadRequest, answer)
@@ -27,6 +39,7 @@ func (srv *Server) createPostHandler(c echo.Context) error {
 		answer.Error = "остались незаполненные поля"
 		return c.JSON(http.StatusBadRequest, answer)
 	}
+	post.Author = claims.UserName
 	id, err := srv.uc.AddPost(post)
 	if err != nil {
 		answer.Error = err.Error()
@@ -44,15 +57,28 @@ func (srv *Server) createCommentHandler(c echo.Context) error {
 		comment models.Comment
 	)
 	answer := models.AnswerComment{Comment_id: -1}
-	err := json.NewDecoder(c.Request().Body).Decode(&comment)
+	authHeader := c.Request().Header.Get("Authorization")
+	if authHeader == "" || len(authHeader) < 8 {
+		answer.Error = "необходимо предоставить заголовок авторизации"
+		return c.JSON(http.StatusUnauthorized, answer)
+	}
+	tokenString := authHeader[7:]                    // Извлекаем токен из заголовка "Bearer <token>"
+	claims, err := srv.uc.ValidationJWT(tokenString) // проверяем токен
 	if err != nil {
-		answer.Error = "invalid request body"
+		answer.Error = "невозможно верифицировать токен " + err.Error()
+		return c.JSON(http.StatusUnauthorized, answer)
+	}
+	err = json.NewDecoder(c.Request().Body).Decode(&comment)
+	if err != nil {
+		answer.Error = err.Error()
 		return c.JSON(http.StatusBadRequest, answer)
 	}
 	if comment.Author == "" || comment.Content == "" {
 		answer.Error = "остались незаполненные поля"
 		return c.JSON(http.StatusBadRequest, answer)
 	}
+	comment.Author = claims.UserName
+	fmt.Println(claims.UserName)
 	count, _ := srv.uc.CountOfPosts()
 	if comment.Post_id < 0 || comment.Post_id > count {
 		answer.Error = "несуществующий ID поста"

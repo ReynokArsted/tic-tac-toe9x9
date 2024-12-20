@@ -71,9 +71,8 @@ func (p *Provider) GenerateJWT(login string) (string, error) {
 			Issuer:    "auth-server",
 		},
 	}
-	var jwtKey = []byte("verySecretKeyNobodyCan'tKnowThisAHAHAHAHAHAHA")
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString(models.JwtKey)
 	if err != nil {
 		return "", err
 	}

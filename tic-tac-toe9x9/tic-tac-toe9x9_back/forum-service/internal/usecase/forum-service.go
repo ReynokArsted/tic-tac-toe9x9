@@ -22,3 +22,7 @@ func (u Usecase) GetPosts(page int) (models.AnswerPagePosts, error) {
 func (u Usecase) GetComments(page, post_id int) (models.AnswerPageComments, error) {
 	return u.p.GetComments(page, post_id)
 }
+
+func (u *Usecase) ValidationJWT(token string) (*models.Claims, error) {
+	return u.p.ValidationJWT(token)
+}

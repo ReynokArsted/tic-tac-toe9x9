@@ -1,5 +1,7 @@
 package models
 
+import "github.com/golang-jwt/jwt/v5"
+
 type Post struct {
 	Id      int    `json:"id"`
 	Title   string `json:"title"`
@@ -43,3 +45,10 @@ type AnswerPageComments struct {
 	Page     int       `json:"page"`
 	Error    string    `json:"error"`
 }
+
+type Claims struct {
+	UserName string `json:"login"`
+	jwt.RegisteredClaims
+}
+
+var JwtKey = []byte("verySecretKeyNobodyCan'tKnowThisAHAHAHAHAHAHA")
