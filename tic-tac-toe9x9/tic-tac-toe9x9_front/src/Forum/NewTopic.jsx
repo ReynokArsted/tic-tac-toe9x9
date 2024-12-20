@@ -1,5 +1,6 @@
 import { Component } from "react"
 import { AppContext } from "../Context"
+import { Link } from "react-router-dom"
 
 export class NewTopic extends Component {
     static contextType = AppContext
@@ -106,6 +107,7 @@ export class NewTopic extends Component {
                     {this.state.errorKey === 3 && <p>В начале или конце названия обсуждения есть пробелы<br></br>
                     Пожалуйста, напишите без них!</p>}
                 </div>
+                <Link to="/forum"><button>Назад</button></Link>
             </>
         )
     }

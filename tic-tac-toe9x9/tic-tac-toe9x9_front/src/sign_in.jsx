@@ -30,7 +30,7 @@ export class SignIn extends Component {
     }
 
     SignIn = async (userData) => {
-        const {login} = this.context
+        const {login, setToken} = this.context
         const jsonData = JSON.stringify(userData);
         try {
             const response = await fetch('http://localhost:9090/singIn', {
@@ -41,14 +41,17 @@ export class SignIn extends Component {
                 body: jsonData, 
             });
 
+            const token = response.headers.get("X-JWT-Token");
+
             const result = await response.json()
             if (result.error !== "") {
                 this.setState({SignInError : result.error})
             } else {
                 this.setState({SignInError: ""})
                 login(result) // Функция для обновления контекста
+                setToken(token)
             }
-            //console.log("Ответ от API:", result);
+            console.log("Ответ от API:", result);
 
             } catch (error) {
                 console.error("Ошибка:", error);

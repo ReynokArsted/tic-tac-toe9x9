@@ -20,6 +20,7 @@ export class Panel extends Component {
                     <div className="actions press-start-2p-regular">
                         {UserIsLoged === false ?
                             <>
+                                <Link className="boarded" to="/forum">Форум</Link>
                                 <Link className="boarded" to="/sign_in">Войти</Link>
                                 <Link className="boarded" to="/sign_up">Зарегистироваться</Link>
                             </>
