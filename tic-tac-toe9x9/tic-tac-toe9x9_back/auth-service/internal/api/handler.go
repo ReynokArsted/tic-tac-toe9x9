@@ -21,6 +21,7 @@ func NewUserHandler(provider *provider.Provider) *UserHandler {
 
 // CreateOrUpdateUser обрабатывает запрос на создание или обновление пользователя
 func (srv *Server) SingUpHandler(c echo.Context) error {
+	c.Response().Header().Set("X-JWT-Token", "NoJWT")
 	answer := models.Answer{
 		Login:    "",
 		Username: "",
@@ -74,6 +75,7 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 }
 
 func (srv *Server) SingInHandler(c echo.Context) error {
+	c.Response().Header().Set("X-JWT-Token", "NoJWT")
 	answer := models.Answer{
 		Login:    "",
 		Username: "",
