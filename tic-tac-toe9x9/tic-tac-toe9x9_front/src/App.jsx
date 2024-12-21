@@ -2,17 +2,17 @@ import { createBrowserRouter, RouterProvider} from 'react-router-dom';
 import AvatarForPanel from "./images/avatar24.png"
 import AvatarForProfile from "./images/avatar100.png" 
 import { Panel } from "./Panel";
-import { MainPage } from "./main_page";
+import { MainPage } from "./MainPage";
 import { SignUp } from './sign_up';
 import { SignIn } from './sign_in';
-import { AppContext, PostContext } from './Context';
+import { AppContext} from './Context';
 import { useState } from 'react';
 import { Profile } from './Profile';
-import { Board } from './Game';
 import { Forum } from './Forum/Forum';
 import { TopicDis } from './Forum/TopicDis';
 import { NewTopic } from './Forum/NewTopic';
 import { EditTopic } from './Forum/EditTopic';
+import { GameRules } from './GameRules';
 
 const router = createBrowserRouter([
   {
@@ -25,8 +25,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/game_rules',
-        //element: <Rules/>
-        element: <></>
+        element: <GameRules/>
       },
       {
         path: '/sign_up',
@@ -38,7 +37,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/game',
-        element: <Board/>
+        element: <></>
       },
       {
         path: '/forum',
@@ -76,11 +75,10 @@ function App() {
   const [Loses, setLosesNumber] = useState(0)
   const [UserToken, setUserToken] = useState("")
 
-  // PostContext
   const [PostTitle, setPostTitle] = useState("")
   const [PostContent, setPostContent] = useState("")
   const [PostAuthor, setPostAuthor] = useState("")
-  const [PostID, setPostID] = useState("")
+  const [PostID, setPostID] = useState(0)
 
   const login = (data) => {
     setUserIsLoged(true)
@@ -89,6 +87,7 @@ function App() {
     setPassword(data.password)
     setWins(data.win)
     setLoses(data.lose)
+    setToken(data.jwttoken)
   }
 
   const logout = () => {
@@ -113,7 +112,7 @@ function App() {
     setUserPassword(pass)
   }
 
-  const setAvatar = (path) => { // Как сохранить аватар, который загружает пользователь?
+  const setAvatar = (path) => {
     setUserAvatarForPanel(path)
     setUserAvatarForProfile(path)
   }
@@ -144,6 +143,7 @@ function App() {
 
   const setPosID = (id) => {
     setPostID(id)
+    console.log("ID" + id)
   }
 
   return (
@@ -151,14 +151,12 @@ function App() {
     {UserIsLoged, Login, UserName, Password, UserAvatarForPanel, 
     UserAvatarForProfile, Wins, Loses, UserToken, login, 
     logout, setName, setLogin, setPassword, setAvatar, 
-    setWins, setLoses, setToken 
+    setWins, setLoses, setToken, PostTitle, PostContent, PostAuthor, PostID,
+        setTitle, setContent, setAuthor, setPosID
     }}>
-      <PostContext.Provider value={{PostTitle, PostContent, PostAuthor, PostID,
-        setTitle, setContent, setAuthor, setPosID}}>
         <div className="App">
           <RouterProvider router={router}></RouterProvider>
         </div>
-      </PostContext.Provider>
   </AppContext.Provider>
   )
 }

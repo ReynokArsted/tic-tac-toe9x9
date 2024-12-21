@@ -1,19 +1,26 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
-import { PostContext } from "../Context";
+import { AppContext } from "../Context";
 
 export class Topic extends Component {
-    static contextType = PostContext
+    static contextType = AppContext
+    state = {
+        Title : "",
+        Content : "",
+        Author : "",
+        ID : ""
+    }
 
     setPostContext = (title, content, author, id) => {
         this.context.setTitle(title)
         this.context.setContent(content)
         this.context.setAuthor(author)
         this.context.setPosID(id)
+        console.log("id in setPosCon " + id)
     }
     render() {
         const {topic} = this.props
-        //console.log(topic.content)
+        //console.log(topic.id)
 
         return ( 
         <>

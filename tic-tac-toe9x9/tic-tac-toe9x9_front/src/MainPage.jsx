@@ -1,5 +1,5 @@
 import { Component } from "react";
-import {} from "./game.css"
+import {} from "./MainPage.css"
 import rules_icon from "./images/img1.png"
 import forum_icon from "./images/forum.png"
 import game_icon from "./images/game.png"
@@ -14,14 +14,6 @@ export class MainPage extends Component {
             <>
                 {UserIsLoged === false &&
                 <>
-                    {/* Отображение поля
-                        <div className="field_position">
-                        <field></field>
-                        <chat></chat>
-                    </div>
-                    */}
-                
-                    {/* Отображение начальной страницы для незарегистрированного пользователя */}
                     <div className="hello_text press-start-2p-regular">
                         <p>Привет! Это место для игры в TIC-TAC-TOE9x9</p>
                         <p>Желаем приятно провести время :)</p>

@@ -9,7 +9,7 @@ export class Panel extends Component {
         const {UserIsLoged, UserName, UserAvatarForPanel, logout} = this.context
         return (
             <>
-                <div className="position">
+                <div className="header position">
                     <div className="actions press-start-2p-regular">
                         <Link 
                         className="boarded" to={UserIsLoged === false ? "/sign_up" : "/game"}
