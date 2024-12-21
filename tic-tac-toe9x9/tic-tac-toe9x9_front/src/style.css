@@ -1,3 +1,8 @@
+html, body {
+    height: 100%;
+    background-color: #fcfcfc;
+}
+
 .logo_font {
     font-family: "Doto", sans-serif;
     font-optical-sizing: auto;
@@ -21,6 +26,15 @@
     height: 50px;
 }
 
+.header {
+    position: sticky;
+    top: 0;
+    padding: 8px 0;
+    z-index: 10;
+    transition: background-color 0.3s;
+}
+
+
 .logo {
     font-size: 35px;
     color: #F4F9B4;
@@ -33,11 +47,11 @@
 
 .boarded
 {
-    border: #F4F9B4 5px solid;
+    border: #F4F9B4 10px solid;
     background-color: #F4F9B4;
     color: rgb(106, 90, 205);
     border-radius: 5px;
-    margin: 5px;
+    margin: 10px;
     align-self: center;
     text-decoration: none;
 }

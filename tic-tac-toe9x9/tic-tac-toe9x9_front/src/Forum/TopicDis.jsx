@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Comments } from "./Comments";
-import { PostContext } from "../Context";
 import { Link } from "react-router-dom";
+import { AppContext } from "../Context";
 
 export class TopicDis extends Component {
     state = {
@@ -11,7 +11,6 @@ export class TopicDis extends Component {
         Content: "",
         Author: "",
         PostError: "",
-        PostLoading: true,
         // Comments
         CommentsList: [],
         Total: 0,
@@ -22,8 +21,8 @@ export class TopicDis extends Component {
         ShowCommentField: false
     }
 
-    static contextType = PostContext
-
+    static contextType = AppContext
+    
     componentDidMount() {
         console.log(this.context)
         this.updateData()
@@ -39,13 +38,20 @@ export class TopicDis extends Component {
     }
 
     updateData = () => {
-            //console.log(this.context)
+        const { PostID, PostTitle, PostAuthor, PostContent } = this.context;
+        if (
+            this.state.ID !== PostID ||
+            this.state.Title !== PostTitle ||
+            this.state.Author !== PostAuthor ||
+            this.state.Content !== PostContent
+        ) {
             this.setState({
-                ID: this.context.PostID,
-                Title: this.context.PostTitle,
-                Author: this.context.PostAuthor,
-                Content: this.context.PostContent,
+                ID: PostID,
+                Title: PostTitle,
+                Author: PostAuthor,
+                Content: PostContent,
             })
+        }
     }
 
     fetchData = async () => {
@@ -54,13 +60,11 @@ export class TopicDis extends Component {
             const response = await fetch(`http://localhost:9091/getComments?page=${Page}&post_id=${ID}`, {
                 method: 'GET', 
                 headers: {
-                    'Content-Type': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization' : `Bearer ${this.context.UserToken}`
                 },
             })
 
-            const textResponse = await response.text(); // Получаем текст ответа
-            console.log("Ответ от API (непарсированный):", textResponse);
-/*
             const result = await response.json()
             if (result.error !== "") {
                 this.setState({ComError : result.error})
@@ -75,32 +79,35 @@ export class TopicDis extends Component {
                 })
             }            
             console.log("Ответ от API:", result);
-*/
+
             } catch (error) {
                 console.error("Ошибка:", error);
             }
     }
 
-    showComField = () => {
+    showComField = (key) => {
         this.setState({
-            ShowCommentField: !this.state.ShowCommentField
+            ShowCommentField: key
         })
     }
 
     resetPostContext = () => {
-        const {setPosID, setTitle, setContent, setAuthor} = this.context
-        setPosID("")
-        setTitle("")
-        setContent("")
-        setAuthor("")
+        const { setPosID, setTitle, setContent, setAuthor } = this.context;
+        if (this.context.PostID || this.context.PostTitle || 
+            this.context.PostContent || this.context.PostAuthor) {
+            setPosID("");
+            setTitle("");
+            setContent("");
+            setAuthor("");
+        }
     }
 
     render() {
-            const {Content, PostLoading, ComLoading, 
+            const {Content, ComLoading, 
                 PostError, ComError, Title, Author, 
-                CommentsList, ShowCommentField, showComField, resetPostContext} = this.state;
+                CommentsList, ShowCommentField} = this.state;
 
-        //if (PostLoading || ComLoading) {
+        //if (ComLoading) {
         //    return <p>Загрузка...</p>;
         //}
 
@@ -125,7 +132,6 @@ export class TopicDis extends Component {
                     <textarea 
                     id="large-text"
                     name="Content"
-                    onChange={(e) => this.Update(e)}
                     placeholder="Тут можно написать о своих идеях или других предложениях"
                     rows={10} // Высота в строках
                     cols={45} // Ширина в символах
@@ -140,14 +146,14 @@ export class TopicDis extends Component {
                         margin: "10px"
                     }}
                     />
-                    <button>Убрать поле</button>
-                    <button onClick={showComField}>Отправить</button>
+                    <button onClick={() => this.showComField(true)}>Убрать поле</button>
+                    <button>Отправить</button>
                 </>
                 : 
-                <button onClick={showComField}>Добавить коментарий</button>
+                <button onClick={() => this.showComField(false)}>Добавить коментарий</button>
                 }
                 <Comments data={CommentsList}/>
-                <Link onClick={resetPostContext} to="/forum"><button>Назад</button></Link>
+                <Link to="/forum"><button onClick={this.resetPostContext}>Назад</button></Link>
             </>
         )
     }

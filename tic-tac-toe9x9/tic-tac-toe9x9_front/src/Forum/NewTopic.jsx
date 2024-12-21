@@ -26,7 +26,7 @@ export class NewTopic extends Component {
                 method: 'POST', 
                 headers: {
                     'Content-Type' : 'application/json',
-                    'X-JWT-Token' : `${this.context.UserToken}`
+                    'Authorization' : `Bearer ${this.context.UserToken}`
                 },
                 body: jsonData
             })
