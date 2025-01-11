@@ -18,7 +18,7 @@ func (srv *Server) createPostHandler(c echo.Context) error {
 	var (
 		post models.Post
 	)
-	answer := models.AnswerPost{Post_id: -1}
+	answer := models.CreatedPost{Post_id: -1}
 	authHeader := c.Request().Header.Get("Authorization")
 	if authHeader == "" || len(authHeader) < 8 {
 		answer.Error = "необходимо предоставить заголовок авторизации"
@@ -134,6 +134,22 @@ func (srv *Server) getCommentsHandler(c echo.Context) error {
 		c.JSON(http.StatusBadRequest, answer)
 	}
 	answer, err = srv.uc.GetComments(page, post_id)
+	if err != nil {
+		answer.Error = err.Error()
+		return c.JSON(http.StatusInternalServerError, answer)
+	}
+	return c.JSON(http.StatusOK, answer)
+}
+
+func (srv *Server) getPostById(c echo.Context) error {
+	var answer models.AnswerPost
+	queryParams := c.QueryParams()
+	post_id, err := strconv.Atoi(queryParams.Get("post_id"))
+	if err != nil {
+		answer.Error = "Unable to get post_id"
+		return c.JSON(http.StatusInternalServerError, answer)
+	}
+	answer, err = srv.uc.GetPostById(post_id)
 	if err != nil {
 		answer.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, answer)

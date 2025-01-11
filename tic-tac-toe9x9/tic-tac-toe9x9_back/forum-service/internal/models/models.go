@@ -16,6 +16,14 @@ type Comment struct {
 }
 
 type AnswerPost struct {
+	Id      int    `json:"id"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
+	Author  string `json:"login"`
+	Error   string `json:"error"`
+}
+
+type CreatedPost struct {
 	Post_id int    `json:"post_id"`
 	Error   string `json:"error"`
 }

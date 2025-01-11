@@ -23,6 +23,7 @@ func NewServer(ip string, port int, uc Usecase) *Server {
 	srv.Server.GET("/getPosts", srv.getPostsHandler)
 	srv.Server.GET("/getComments", srv.getCommentsHandler)
 	srv.Server.GET("/getCountOfPosts", srv.getCountOfPostsHandler)
+	srv.Server.GET("/getPostById", srv.getPostById)
 
 	return srv
 }

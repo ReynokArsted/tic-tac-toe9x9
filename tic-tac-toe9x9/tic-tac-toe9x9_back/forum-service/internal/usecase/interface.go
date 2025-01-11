@@ -8,5 +8,5 @@ type Provider interface {
 	CountOfPosts() (int, error)
 	GetPosts(int) (models.AnswerPagePosts, error)
 	GetComments(int, int) (models.AnswerPageComments, error)
-	ValidationJWT(string) (*models.Claims, error)
+	GetPostById(int) (models.AnswerPost, error)
 }
