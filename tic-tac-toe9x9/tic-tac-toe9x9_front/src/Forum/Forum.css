@@ -1,0 +1,10 @@
+.top_block{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pages_clicker {
+    display: flex;
+    gap: 5px;
+}

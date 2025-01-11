@@ -2,6 +2,7 @@ import { Component } from "react";
 import { Link } from "react-router-dom";
 import { Topics } from "./Topics";
 import { AppContext } from "../Context";
+import {} from "./Forum.css"
 
 export class Forum extends Component {
     state = {
@@ -18,7 +19,6 @@ export class Forum extends Component {
 
     fetchData = async () => {
         const {Page} = this.state
-        //this.setState({ Loading: true });
         try {
             const response = await fetch(`http://localhost:9091/getPosts?page=${Page}`, {
                 method: 'GET', 
@@ -42,12 +42,17 @@ export class Forum extends Component {
             console.log("Ответ от API:", result);
             } catch (error) {
                 console.error("Ошибка:", error);
-                this.setState({ Loading: false });
+                this.setState({Loading: true});
             }
     }
 
     componentDidMount() {
         this.fetchData()
+        window.addEventListener('keydown', this.KeyClick)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.KeyClick)
     }
 
     toNextPage = () => {
@@ -68,6 +73,14 @@ export class Forum extends Component {
             }
     }
 
+    KeyClick = (e) => {
+        if (e.key === 'ArrowLeft') {
+            this.toPrevPage();
+        } else if (e.key === 'ArrowRight') {
+            this.toNextPage();
+        }
+    }
+
     render() {
         const {Posts, Page, NumberPages, Loading, Error} = this.state;
 
@@ -81,7 +94,18 @@ export class Forum extends Component {
 
         return (
             <>
-                <h1>Темы для обсуждений</h1>
+                <div className="top_block">
+                    <h1>Темы для обсуждений</h1>
+                    <div className="pages_clicker">
+                        <button onClick={this.toPrevPage} disabled={Page === 1}>
+                            {'<'}
+                        </button>
+                        <button onClick={this.toNextPage} disabled={Page === NumberPages}>
+                            {'>'}
+                        </button>
+                        <span>{Page} из {NumberPages} </span>
+                    </div>
+                </div>
                 {this.context.UserIsLoged === true && 
                 <>
                 <Link to="/new_topic"><button>Создать новое обсуждение</button></Link>
@@ -90,15 +114,6 @@ export class Forum extends Component {
                 }
                 <div className="list">
                 <Topics data={Posts}/>
-                </div>
-                <div>
-                    <button onClick={this.toPrevPage} disabled={Page === 1}>
-                        Назад
-                    </button>
-                    <span> Страница {Page} из {NumberPages} </span>
-                    <button onClick={this.toNextPage} disabled={Page === NumberPages}>
-                        Вперёд
-                    </button>
                 </div>
             </>
         );
