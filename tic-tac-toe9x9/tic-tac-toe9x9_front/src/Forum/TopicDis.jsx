@@ -1,11 +1,13 @@
 import { Component } from "react";
 import { Comments } from "./Comments";
 import { Link } from "react-router-dom";
+import { AppContext } from "../Context";
 
 export class TopicDis extends Component {
+    static contextType = AppContext
     state = {
         // Post
-        ID: "",
+        ID: this.context.PostID,
         Title: "",
         Content: "",
         Author: "",
@@ -19,10 +21,41 @@ export class TopicDis extends Component {
         ComError: "",
         ShowCommentField: false
     }
+
     
     componentDidMount() {
         console.log(this.context)
+        this.getPostInfo()
         this.fetchData()
+    }
+
+    getPostInfo = async () => {
+        const {ID} = this.state
+        //this.setState({ID: this.context.PostID})
+
+        try {
+            const response = await fetch(`http://localhost:9091/getPostById?post_id=${ID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : `Bearer ${this.context.UserToken}`
+                }
+            })
+            const result = await response.json()
+            if (result.error !== "") {
+                this.setState({PostError : result.error})
+            } else {
+                this.setState({
+                    Title: result.title,
+                    Content: result.content,
+                    Author: result.login
+                })
+            }
+            console.log("Ответ от API: ", result)
+        }
+        catch(error) {
+            console.error("Ошибка: ", error)
+        }
     }
 
     fetchData = async () => {
@@ -49,10 +82,10 @@ export class TopicDis extends Component {
                     ComLoading: false
                 })
             }            
-            console.log("Ответ от API:", result);
+            console.log("Ответ от API: ", result);
 
             } catch (error) {
-                console.error("Ошибка:", error);
+                console.error("Ошибка: ", error);
             }
     }
 
@@ -67,9 +100,9 @@ export class TopicDis extends Component {
                 PostError, ComError, Title, Author, 
                 CommentsList, ShowCommentField} = this.state;
 
-        //if (ComLoading) {
-        //    return <p>Загрузка...</p>;
-        //}
+        if (ComLoading) {
+            return <p>Загрузка...</p>;
+        }
 
         if (PostError) {
             return <p>Ошибка: {PostError}</p>;
@@ -112,7 +145,8 @@ export class TopicDis extends Component {
                 : 
                 <button onClick={() => this.showComField(false)}>Добавить коментарий</button>
                 }
-                <Comments data={CommentsList}/>
+                {CommentsList === null ? 
+                <p>Комментарии отсутствуют</p> : <Comments data={CommentsList}/>}
                 <Link to="/forum"><button>Назад</button></Link>
             </>
         )

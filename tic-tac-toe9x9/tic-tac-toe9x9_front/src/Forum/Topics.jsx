@@ -1,12 +1,12 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
+import { AppContext } from "../Context";
+import {} from "./Topics.css"
 
 export class Topic extends Component {
-    state = {
-        Title : "",
-        Content : "",
-        Author : "",
-        ID : ""
+    static contextType = AppContext
+    setID = () => {
+        this.context.setPosID(this.props.topic.id)
     }
 
     render() {
@@ -18,9 +18,8 @@ export class Topic extends Component {
             <div className="topic">
                 <Link 
                 to={{pathname: "/topic"}}>
-                    {topic.title}
+                    <button className="invisible" onClick={this.setID}>{topic.title}</button>
                 </Link>
-                {/*<Link to={`/topic`} id={topic.id}>{topic.title}</Link>*/}
                 <p>{topic.login}</p>
             </div>
         </>

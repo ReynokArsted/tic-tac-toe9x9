@@ -76,9 +76,6 @@ function App() {
   const [Loses, setLosesNumber] = useState(0)
   const [UserToken, setUserToken] = useState("")
 
-  const [PostTitle, setPostTitle] = useState("")
-  const [PostContent, setPostContent] = useState("")
-  const [PostAuthor, setPostAuthor] = useState("")
   const [PostID, setPostID] = useState(0)
 
   const login = (data) => {
@@ -130,18 +127,6 @@ function App() {
     setUserToken(token)
   }
 
-  const setTitle = (title) => {
-    setPostTitle(title)
-  }
-
-  const setContent = (content) => {
-    setPostContent(content)
-  }
-
-  const setAuthor = (author) => {
-    setPostAuthor(author)
-  }
-
   const setPosID = (id) => {
     setPostID(id)
     console.log("ID" + id)
@@ -152,8 +137,7 @@ function App() {
     {UserIsLoged, Login, UserName, Password, UserAvatarForPanel, 
     UserAvatarForProfile, Wins, Loses, UserToken, login, 
     logout, setName, setLogin, setPassword, setAvatar, 
-    setWins, setLoses, setToken, PostTitle, PostContent, PostAuthor, PostID,
-        setTitle, setContent, setAuthor, setPosID
+    setWins, setLoses, setToken, PostID, setPosID
     }}>
         <div className="App">
           <RouterProvider router={router}></RouterProvider>
