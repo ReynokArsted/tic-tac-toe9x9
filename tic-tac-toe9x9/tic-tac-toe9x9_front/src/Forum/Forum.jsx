@@ -6,6 +6,7 @@ import { AppContext } from "../Context";
 export class Forum extends Component {
     state = {
         Posts: [],
+        NumberPages: 0,
         Total: 0,
         PageSize: 0,
         Page: 1,
@@ -17,6 +18,7 @@ export class Forum extends Component {
 
     fetchData = async () => {
         const {Page} = this.state
+        //this.setState({ Loading: true });
         try {
             const response = await fetch(`http://localhost:9091/getPosts?page=${Page}`, {
                 method: 'GET', 
@@ -30,6 +32,7 @@ export class Forum extends Component {
             } else {
                 this.setState({
                     Posts: result.posts,
+                    NumberPages: Math.ceil(result.total / 10),
                     Total: result.total,
                     PageSize: result.page_size,
                     Page: result.page,
@@ -39,6 +42,7 @@ export class Forum extends Component {
             console.log("Ответ от API:", result);
             } catch (error) {
                 console.error("Ошибка:", error);
+                this.setState({ Loading: false });
             }
     }
 
@@ -46,8 +50,26 @@ export class Forum extends Component {
         this.fetchData()
     }
 
+    toNextPage = () => {
+        const { Page, NumberPages } = this.state;
+
+        if (Page < NumberPages) {
+            this.setState(
+                (prevState) => ({ Page: prevState.Page + 1 }), () => {this.fetchData()})
+            }
+    }
+
+    toPrevPage = () => {
+        const { Page } = this.state
+
+        if (Page > 1) {
+            this.setState(
+                (prevState) => ({ Page: prevState.Page - 1 }), () => {this.fetchData()})
+            }
+    }
+
     render() {
-        const {Posts, Loading, Error} = this.state;
+        const {Posts, Page, NumberPages, Loading, Error} = this.state;
 
         if (Loading === true) {
             return <p>Загрузка...</p>;
@@ -68,6 +90,15 @@ export class Forum extends Component {
                 }
                 <div className="list">
                 <Topics data={Posts}/>
+                </div>
+                <div>
+                    <button onClick={this.toPrevPage} disabled={Page === 1}>
+                        Назад
+                    </button>
+                    <span> Страница {Page} из {NumberPages} </span>
+                    <button onClick={this.toNextPage} disabled={Page === NumberPages}>
+                        Вперёд
+                    </button>
                 </div>
             </>
         );

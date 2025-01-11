@@ -1,0 +1,14 @@
+.invisible {
+    border: none;
+    background: none;
+    color: slateblue;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+}
+
+.topic {
+    border: solid 3px slateblue;
+    border-radius: 5px;
+    margin: 10px;
+}
