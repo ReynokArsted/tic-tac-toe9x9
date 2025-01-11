@@ -1,7 +1,6 @@
 import { Component } from "react";
 import { Comments } from "./Comments";
 import { Link } from "react-router-dom";
-import { AppContext } from "../Context";
 
 export class TopicDis extends Component {
     state = {
@@ -20,44 +19,16 @@ export class TopicDis extends Component {
         ComError: "",
         ShowCommentField: false
     }
-
-    static contextType = AppContext
     
     componentDidMount() {
         console.log(this.context)
-        this.updateData()
         this.fetchData()
-    }
-
-    componentWillUnmount() {
-        const {setPosID, setTitle, setContent, setAuthor} = this.context
-        setPosID("")
-        setTitle("")
-        setContent("")
-        setAuthor("")
-    }
-
-    updateData = () => {
-        const { PostID, PostTitle, PostAuthor, PostContent } = this.context;
-        if (
-            this.state.ID !== PostID ||
-            this.state.Title !== PostTitle ||
-            this.state.Author !== PostAuthor ||
-            this.state.Content !== PostContent
-        ) {
-            this.setState({
-                ID: PostID,
-                Title: PostTitle,
-                Author: PostAuthor,
-                Content: PostContent,
-            })
-        }
     }
 
     fetchData = async () => {
         const {Page, ID} = this.state
         try {
-            const response = await fetch(`http://localhost:9091/getComments?page=${Page}&post_id=${ID}`, {
+        const response = await fetch(`http://localhost:9091/getComments?page=${Page}&post_id=${ID}`, {
                 method: 'GET', 
                 headers: {
                     'Content-Type': 'application/json',
@@ -89,17 +60,6 @@ export class TopicDis extends Component {
         this.setState({
             ShowCommentField: key
         })
-    }
-
-    resetPostContext = () => {
-        const { setPosID, setTitle, setContent, setAuthor } = this.context;
-        if (this.context.PostID || this.context.PostTitle || 
-            this.context.PostContent || this.context.PostAuthor) {
-            setPosID("");
-            setTitle("");
-            setContent("");
-            setAuthor("");
-        }
     }
 
     render() {
@@ -153,7 +113,7 @@ export class TopicDis extends Component {
                 <button onClick={() => this.showComField(false)}>Добавить коментарий</button>
                 }
                 <Comments data={CommentsList}/>
-                <Link to="/forum"><button onClick={this.resetPostContext}>Назад</button></Link>
+                <Link to="/forum"><button>Назад</button></Link>
             </>
         )
     }
