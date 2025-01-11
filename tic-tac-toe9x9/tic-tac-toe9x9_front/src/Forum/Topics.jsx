@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
-import { AppContext } from "../Context";
+import { AppContext } from "../App/Context";
 import {} from "./Topics.css"
 
 export class Topic extends Component {

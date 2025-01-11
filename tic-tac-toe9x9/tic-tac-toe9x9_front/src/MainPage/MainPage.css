@@ -22,7 +22,7 @@
 .hello_text {
     font-size: 26px;
     text-align: center;
-    color: slateblue;
+    color: #6a5acd;
     margin-top: 50px;
 }
 
@@ -46,7 +46,7 @@ a {
 }
 
 field {
-    border: slateblue 5px solid;
+    border: #6a5acd 5px solid;
     height: 400px;
     width: 400px;
     margin-top: 100px;
@@ -54,7 +54,7 @@ field {
 }
 
 chat {
-    border: slateblue 5px solid;
+    border: #6a5acd 5px solid;
     height: 400px;
     width: 270px;
     margin-top: 100px;
