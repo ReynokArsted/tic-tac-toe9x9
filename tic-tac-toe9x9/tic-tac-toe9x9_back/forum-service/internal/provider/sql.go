@@ -57,7 +57,7 @@ func (p *Provider) GetPosts(page int) (models.AnswerPagePosts, error) {
 	if err != nil {
 		return models.AnswerPagePosts{}, errors.New("ошибка при получении количества записей: " + err.Error())
 	}
-	if total < offset*10 {
+	if total < offset {
 		return models.AnswerPagePosts{
 			Posts:    posts,
 			Total:    total,
