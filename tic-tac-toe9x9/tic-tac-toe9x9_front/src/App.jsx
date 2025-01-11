@@ -13,7 +13,6 @@ import { TopicDis } from './Forum/TopicDis';
 import { NewTopic } from './Forum/NewTopic';
 import { EditTopic } from './Forum/EditTopic';
 import { GameRules } from './GameRules';
-import Game from './Game/components/Game';
 
 const router = createBrowserRouter([
   {
@@ -38,7 +37,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/game',
-        element: <Game/>
+        element: <></>
       },
       {
         path: '/forum',

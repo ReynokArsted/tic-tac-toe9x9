@@ -10,7 +10,7 @@ export class Forum extends Component {
         PageSize: 0,
         Page: 1,
         Loading: false,
-        Error: ""
+        Error: "",
     }
 
     static contextType = AppContext

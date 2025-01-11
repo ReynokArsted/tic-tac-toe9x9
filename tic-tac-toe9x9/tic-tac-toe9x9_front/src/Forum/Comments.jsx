@@ -6,8 +6,8 @@ export class Comment extends Component {
         const {comment} = this.props
         return(
             <>
-                <p>{comment.content}</p>
-                <p>{comment.login}</p>
+                <p>{comment.text}</p>
+                <p>{comment.author}</p>
             </>
         )
     }

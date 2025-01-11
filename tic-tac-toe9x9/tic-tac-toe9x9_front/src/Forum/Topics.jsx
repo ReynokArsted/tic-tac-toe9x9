@@ -1,7 +1,9 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
+import { AppContext } from "../Context";
 
 export class Topic extends Component {
+    static contextType = AppContext
     state = {
         Title : "",
         Content : "",
@@ -9,6 +11,13 @@ export class Topic extends Component {
         ID : ""
     }
 
+    setPostContext = (title, content, author, id) => {
+        this.context.setTitle(title)
+        this.context.setContent(content)
+        this.context.setAuthor(author)
+        this.context.setPosID(id)
+        console.log("id in setPosCon " + id)
+    }
     render() {
         const {topic} = this.props
         //console.log(topic.id)
@@ -17,10 +26,10 @@ export class Topic extends Component {
         <>
             <div className="topic">
                 <Link 
+                onClick={this.setPostContext(topic.title, topic.content, topic.author, topic.id)} 
                 to={{pathname: "/topic"}}>
                     {topic.title}
                 </Link>
-                {/*<Link to={`/topic`} id={topic.id}>{topic.title}</Link>*/}
                 <p>{topic.login}</p>
             </div>
         </>

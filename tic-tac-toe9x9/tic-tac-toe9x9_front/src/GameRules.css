@@ -1,23 +1,25 @@
 .centered-text {
+
     width: 45%; /* Устанавливаем ширину элемента */
     height: 100%;
     margin: 0 auto; /* Центрируем элемент по горизонтали */
-    text-align: center; 
-    border: 2px solid #6a5acd;
+    text-align: center; /* Центрируем текст внутри блока */
+    border: 2px solid #6a5acd; /* Добавляем рамку */
     color: #6a5acd;
     font-size: 18px;
-    padding: 10px; 
-    word-wrap: break-word; 
+    padding: 10px; /* Добавляем внутренние отступы */
+    word-wrap: break-word; /* Перенос текста на новую строку, если нужно */
 }
 
 .parts {
-    margin: 0 auto; 
-    padding: 20px;   
+    margin: 0 auto;  /* Центрируем контент по горизонтали */
+    padding: 20px;   /* Добавляем отступы */
 }
 
 .pict {
-    margin: 100 auto;
-    padding: 0px;
+    width: 10px;
+    height: 10px;
+    object-fit: cover;
 }
 
 .press-start-2p-regular {
