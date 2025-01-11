@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
 import { Topics } from "./Topics";
-import { AppContext } from "../Context";
+import { AppContext } from "../App/Context";
 import {} from "./Forum.css"
 
 export class Forum extends Component {

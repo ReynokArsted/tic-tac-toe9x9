@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { AppContext } from "./Context";
+import { AppContext } from "../App/Context";
 import { Link, Navigate } from "react-router-dom";
 
 

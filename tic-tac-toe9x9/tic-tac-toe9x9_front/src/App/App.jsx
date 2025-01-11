@@ -1,19 +1,19 @@
 import { createBrowserRouter, RouterProvider} from 'react-router-dom';
-import AvatarForPanel from "./images/avatar24.png"
-import AvatarForProfile from "./images/avatar100.png" 
-import { Panel } from "./Panel";
-import { MainPage } from "./MainPage";
-import { SignUp } from './sign_up';
-import { SignIn } from './sign_in';
+import AvatarForPanel from "../images/avatar24.png"
+import AvatarForProfile from "../images/avatar100.png" 
+import { Panel } from "../Panel/Panel";
+import { MainPage } from "../MainPage/MainPage";
+import { SignUp } from '../SignUp/sign_up';
+import { SignIn } from '../SignIn/sign_in';
 import { AppContext} from './Context';
 import { useState } from 'react';
-import { Profile } from './Profile';
-import { Forum } from './Forum/Forum';
-import { TopicDis } from './Forum/TopicDis';
-import { NewTopic } from './Forum/NewTopic';
-import { EditTopic } from './Forum/EditTopic';
-import { GameRules } from './GameRules';
-import Game from './Game/components/Game';
+import { Profile } from '../Profile/Profile';
+import { Forum } from '../Forum/Forum';
+import { TopicDis } from '../Forum/TopicDis';
+import { NewTopic } from '../Forum/NewTopic';
+import { EditTopic } from '../Forum/EditTopic';
+import { GameRules } from '../GameRules/GameRules';
+import Game from '../Game/Game';
 
 const router = createBrowserRouter([
   {

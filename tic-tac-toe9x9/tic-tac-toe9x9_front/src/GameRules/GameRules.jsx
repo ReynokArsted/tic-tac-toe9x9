@@ -1,6 +1,6 @@
 import { Component } from "react";
 import {} from "./GameRules.css"
-import picture from "./images/field.png"
+import picture from "../images/field.png"
 
 
 export class GameRules extends Component {
@@ -23,7 +23,7 @@ export class GameRules extends Component {
                     </p>
                 </div>
                 <div className="pict">
-                    <img src={picture} all=""></img>
+                    <img src={picture} alt=""></img>
                 </div>
             </div>
         )

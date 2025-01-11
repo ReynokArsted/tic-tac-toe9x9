@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Comments } from "./Comments";
 import { Link } from "react-router-dom";
-import { AppContext } from "../Context";
+import { AppContext } from "../App/Context";
 
 export class TopicDis extends Component {
     static contextType = AppContext

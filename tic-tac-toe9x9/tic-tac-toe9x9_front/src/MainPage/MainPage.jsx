@@ -1,10 +1,10 @@
 import { Component } from "react";
 import {} from "./MainPage.css"
-import rules_icon from "./images/img1.png"
-import forum_icon from "./images/forum.png"
-import game_icon from "./images/game.png"
+import rules_icon from "../images/img1.png"
+import forum_icon from "../images/forum.png"
+import game_icon from "../images/game.png"
 import { Link } from "react-router-dom";
-import { AppContext } from "./Context";
+import { AppContext } from "../App/Context";
 
 export class MainPage extends Component {
     static contextType = AppContext

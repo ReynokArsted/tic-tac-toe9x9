@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Link, Outlet } from "react-router-dom";
 import {} from "./style.css"
-import { AppContext } from "./Context"
+import { AppContext } from "../App/Context"
 
 export class Panel extends Component {
     static contextType = AppContext
