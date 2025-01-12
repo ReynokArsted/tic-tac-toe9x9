@@ -205,7 +205,7 @@ func (srv *Server) updatePost(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid body request"})
 	}
-	if post.Author == "" || post.Title == "" || post.Content == "" {
+	if post.Title == "" || post.Content == "" {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "остались незаполненные поля"})
 	}
 	post.Author = claims.UserName
