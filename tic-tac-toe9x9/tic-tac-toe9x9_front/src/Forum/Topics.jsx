@@ -1,23 +1,14 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
-import { AppContext } from "../Context";
+import { AppContext } from "../App/Context";
+import {} from "./Topics.css"
 
 export class Topic extends Component {
     static contextType = AppContext
-    state = {
-        Title : "",
-        Content : "",
-        Author : "",
-        ID : ""
+    setID = () => {
+        this.context.setPosID(this.props.topic.id)
     }
 
-    setPostContext = (title, content, author, id) => {
-        this.context.setTitle(title)
-        this.context.setContent(content)
-        this.context.setAuthor(author)
-        this.context.setPosID(id)
-        console.log("id in setPosCon " + id)
-    }
     render() {
         const {topic} = this.props
         //console.log(topic.id)
@@ -26,9 +17,8 @@ export class Topic extends Component {
         <>
             <div className="topic">
                 <Link 
-                onClick={this.setPostContext(topic.title, topic.content, topic.author, topic.id)} 
                 to={{pathname: "/topic"}}>
-                    {topic.title}
+                    <button className="invisible" onClick={this.setID}>{topic.title}</button>
                 </Link>
                 <p>{topic.login}</p>
             </div>

@@ -1,5 +1,5 @@
 import { Component } from "react"
-import { AppContext } from "../Context"
+import { AppContext } from "../App/Context"
 import { Link } from "react-router-dom"
 
 export class NewTopic extends Component {

@@ -1,0 +1,32 @@
+.centered-text {
+    width: 45%; /* Устанавливаем ширину элемента */
+    height: 100%;
+    margin: 0 auto; /* Центрируем элемент по горизонтали */
+    text-align: center; 
+    border: 2px solid #6a5acd;
+    color: #6a5acd;
+    font-size: 18px;
+    padding: 10px; 
+    word-wrap: break-word; 
+}
+
+.parts {
+    margin: 0 auto; 
+    padding: 20px;   
+}
+
+.pict {
+    margin: 100 auto;
+    padding: 0px;
+}
+
+.press-start-2p-regular {
+    font-family: "Press Start 2P", system-ui;
+    font-weight: 400;
+    font-style: normal;
+}
+.m-plus-rounded-1c-regular {
+    font-family: "M PLUS Rounded 1c", serif;
+    font-weight: 400;
+    font-style: normal;
+}

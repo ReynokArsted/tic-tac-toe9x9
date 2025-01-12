@@ -1,16 +1,18 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
 import { Topics } from "./Topics";
-import { AppContext } from "../Context";
+import { AppContext } from "../App/Context";
+import {} from "./Forum.css"
 
 export class Forum extends Component {
     state = {
         Posts: [],
+        NumberPages: 0,
         Total: 0,
         PageSize: 0,
         Page: 1,
         Loading: false,
-        Error: "",
+        Error: ""
     }
 
     static contextType = AppContext
@@ -30,6 +32,7 @@ export class Forum extends Component {
             } else {
                 this.setState({
                     Posts: result.posts,
+                    NumberPages: Math.ceil(result.total / 10),
                     Total: result.total,
                     PageSize: result.page_size,
                     Page: result.page,
@@ -39,15 +42,47 @@ export class Forum extends Component {
             console.log("Ответ от API:", result);
             } catch (error) {
                 console.error("Ошибка:", error);
+                this.setState({Loading: true});
             }
     }
 
     componentDidMount() {
         this.fetchData()
+        window.addEventListener('keydown', this.KeyClick)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.KeyClick)
+    }
+
+    toNextPage = () => {
+        const { Page, NumberPages } = this.state;
+
+        if (Page < NumberPages) {
+            this.setState(
+                (prevState) => ({ Page: prevState.Page + 1 }), () => {this.fetchData()})
+            }
+    }
+
+    toPrevPage = () => {
+        const { Page } = this.state
+
+        if (Page > 1) {
+            this.setState(
+                (prevState) => ({ Page: prevState.Page - 1 }), () => {this.fetchData()})
+            }
+    }
+
+    KeyClick = (e) => {
+        if (e.key === 'ArrowLeft') {
+            this.toPrevPage();
+        } else if (e.key === 'ArrowRight') {
+            this.toNextPage();
+        }
     }
 
     render() {
-        const {Posts, Loading, Error} = this.state;
+        const {Posts, Page, NumberPages, Loading, Error} = this.state;
 
         if (Loading === true) {
             return <p>Загрузка...</p>;
@@ -59,7 +94,18 @@ export class Forum extends Component {
 
         return (
             <>
-                <h1>Темы для обсуждений</h1>
+                <div className="top_block">
+                    <h1>Темы для обсуждений</h1>
+                    <div className="pages_clicker">
+                        <button onClick={this.toPrevPage} disabled={Page === 1}>
+                            {'<'}
+                        </button>
+                        <button onClick={this.toNextPage} disabled={Page === NumberPages}>
+                            {'>'}
+                        </button>
+                        <span>{Page} из {NumberPages} </span>
+                    </div>
+                </div>
                 {this.context.UserIsLoged === true && 
                 <>
                 <Link to="/new_topic"><button>Создать новое обсуждение</button></Link>
