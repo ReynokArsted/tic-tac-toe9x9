@@ -47,3 +47,7 @@ func (u *Usecase) ValidationJWT(token_string string) (*models.Claims, error) {
 func (u *Usecase) GetPostById(post_id int) (models.AnswerPost, error) {
 	return u.p.GetPostById(post_id)
 }
+
+func (u *Usecase) DeletePostById(post_id int) error {
+	return u.p.DeletePostById(post_id)
+}

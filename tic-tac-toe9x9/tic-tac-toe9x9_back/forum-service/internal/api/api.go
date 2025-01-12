@@ -24,6 +24,7 @@ func NewServer(ip string, port int, uc Usecase) *Server {
 	srv.Server.GET("/getComments", srv.getCommentsHandler)
 	srv.Server.GET("/getCountOfPosts", srv.getCountOfPostsHandler)
 	srv.Server.GET("/getPostById", srv.getPostById)
+	srv.Server.DELETE("/deletePostById", srv.deletePostById)
 
 	return srv
 }

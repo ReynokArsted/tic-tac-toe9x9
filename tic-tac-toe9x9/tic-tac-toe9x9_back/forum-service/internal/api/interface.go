@@ -10,4 +10,5 @@ type Usecase interface {
 	GetComments(int, int) (models.AnswerPageComments, error)
 	ValidationJWT(string) (*models.Claims, error)
 	GetPostById(int) (models.AnswerPost, error)
+	DeletePostById(int) error
 }

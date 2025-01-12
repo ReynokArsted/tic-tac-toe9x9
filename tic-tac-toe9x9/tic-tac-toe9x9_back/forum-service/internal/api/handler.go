@@ -156,3 +156,18 @@ func (srv *Server) getPostById(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, answer)
 }
+
+func (srv *Server) deletePostById(c echo.Context) error {
+	queryParams := c.QueryParams()
+	post_id, err := strconv.Atoi(queryParams.Get("post_id"))
+
+	if err != nil {
+		return c.JSON(http.StatusOK, map[string]string{"error": err.Error()})
+	}
+
+	err = srv.uc.DeletePostById(post_id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusOK, map[string]string{"error": ""})
+}

@@ -9,4 +9,5 @@ type Provider interface {
 	GetPosts(int) (models.AnswerPagePosts, error)
 	GetComments(int, int) (models.AnswerPageComments, error)
 	GetPostById(int) (models.AnswerPost, error)
+	DeletePostById(int) error
 }

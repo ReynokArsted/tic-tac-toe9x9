@@ -16,11 +16,12 @@ type Comment struct {
 }
 
 type AnswerPost struct {
-	Id      int    `json:"id"`
-	Title   string `json:"title"`
-	Content string `json:"content"`
-	Author  string `json:"login"`
-	Error   string `json:"error"`
+	Id        int    `json:"id"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+	Author    string `json:"login"`
+	Error     string `json:"error"`
+	IsDeleted bool   `json:"is_deleted"`
 }
 
 type CreatedPost struct {
