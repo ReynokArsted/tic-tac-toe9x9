@@ -25,6 +25,7 @@ func NewServer(ip string, port int, uc Usecase) *Server {
 	srv.Server.GET("/getCountOfPosts", srv.getCountOfPostsHandler)
 	srv.Server.GET("/getPostById", srv.getPostById)
 	srv.Server.DELETE("/deletePostById", srv.deletePostById)
+	srv.Server.DELETE("/deleteCommentById", srv.deleteCommentById)
 	srv.Server.PATCH("/updatePost", srv.updatePost)
 
 	return srv

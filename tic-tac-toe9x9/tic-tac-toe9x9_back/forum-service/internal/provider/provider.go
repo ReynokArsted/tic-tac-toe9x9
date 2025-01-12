@@ -31,6 +31,7 @@ func NewProvider(host string, port int, user, password, dbName string) *Provider
  			title VARCHAR(255) NOT NULL,
   			content TEXT NOT NULL,
   			author TEXT NOT NULL,
+			is_deleted BOOLEN DEFAULT FALSE,
   			FOREIGN KEY (author) REFERENCES registred_users(login)
 		);
     `)
@@ -44,6 +45,7 @@ func NewProvider(host string, port int, user, password, dbName string) *Provider
 		post_id INT NOT NULL,
 		author TEXT NOT NULL,
 		content TEXT NOT NULL,
+		is_deleted BOOLEN DEFAULT FALSE,
 		FOREIGN KEY (post_id) REFERENCES posts(id),
 		FOREIGN KEY (author) REFERENCES registred_users(login)
 	  );

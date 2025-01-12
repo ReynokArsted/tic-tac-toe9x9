@@ -12,4 +12,5 @@ type Usecase interface {
 	GetPostById(int) (models.AnswerPost, error)
 	DeletePostById(string, int) error
 	UpdatePost(int, models.Post) error
+	DeleteCommentById(string, int) error
 }

@@ -224,3 +224,33 @@ func (srv *Server) updatePost(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, map[string]string{"error": ""})
 }
+
+// *
+func (srv *Server) deleteCommentById(c echo.Context) error {
+	queryParams := c.QueryParams()
+	comment_id, err := strconv.Atoi(queryParams.Get("comment_id"))
+
+	if err != nil {
+		return c.JSON(http.StatusOK, map[string]string{"error": err.Error()})
+	}
+
+	authHeader := c.Request().Header.Get("Authorization")
+	if authHeader == "" || len(authHeader) < 8 {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "необходимо предоставить заголовок авторизации"})
+	}
+	tokenString := authHeader[7:]                    // Извлекаем токен из заголовка "Bearer <token>"
+	claims, err := srv.uc.ValidationJWT(tokenString) // проверяем токен
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "невозможно верифицировать токен " + err.Error()})
+	}
+
+	login := claims.UserName
+
+	err = srv.uc.DeleteCommentById(login, comment_id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusOK, map[string]string{"error": ""})
+}
+
+//*/

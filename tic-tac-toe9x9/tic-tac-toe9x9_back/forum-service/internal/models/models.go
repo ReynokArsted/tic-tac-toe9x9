@@ -10,9 +10,11 @@ type Post struct {
 }
 
 type Comment struct {
-	Post_id int    `json:"post_id"`
-	Author  string `json:"login"`
-	Content string `json:"content"`
+	Post_id    int    `json:"post_id"`
+	Comment_id int    `json:"comment_id"`
+	Author     string `json:"login"`
+	Content    string `json:"content"`
+	IsDeleted  bool   `json:"is_deleted"`
 }
 
 type AnswerPost struct {

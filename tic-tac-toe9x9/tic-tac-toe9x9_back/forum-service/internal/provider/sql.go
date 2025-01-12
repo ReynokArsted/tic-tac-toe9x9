@@ -93,7 +93,7 @@ func (p *Provider) CountOfComments(post_id int) (int, error) {
 func (p *Provider) GetComments(page, post_id int) (models.AnswerPageComments, error) {
 	var comments []models.Comment
 	offset := (page - 1) * 10
-	query := "SELECT post_id,  author, content FROM comments WHERE post_id = $3 LIMIT $1 OFFSET $2"
+	query := "SELECT id, post_id,  author, content FROM comments WHERE is_deleted = FALSE AND post_id = $3 LIMIT $1 OFFSET $2"
 	rows, err := p.UserDB.Query(query, 10, offset, post_id)
 	if err != nil {
 		return models.AnswerPageComments{}, err
@@ -102,7 +102,7 @@ func (p *Provider) GetComments(page, post_id int) (models.AnswerPageComments, er
 
 	for rows.Next() {
 		var comment models.Comment
-		err := rows.Scan(&comment.Post_id, &comment.Author, &comment.Content)
+		err := rows.Scan(&comment.Comment_id, &comment.Post_id, &comment.Author, &comment.Content)
 		if err != nil {
 			return models.AnswerPageComments{}, err
 		}
@@ -215,4 +215,72 @@ func (p *Provider) UpdatePost(post_id int, post models.Post) error {
 	query := "UPDATE posts SET title = $2, content = $3 WHERE id = $1"
 	_, err = p.UserDB.Exec(query, post_id, post.Title, post.Content)
 	return err
+}
+
+func (p *Provider) GetCommentById(comment_id int) (models.Comment, error) {
+	var comment models.Comment
+	query := "SELECT id, post_id, author, content, is_deleted FROM comments WHERE id = $1"
+	row, err := p.UserDB.Query(query, comment_id)
+
+	if err != nil {
+		return models.Comment{}, err
+	}
+
+	defer row.Close()
+
+	flag := false
+	for row.Next() {
+		err := row.Scan(&comment.Comment_id, &comment.Post_id, &comment.Author, &comment.Content, &comment.IsDeleted)
+		if err != nil {
+			return models.Comment{}, err
+		}
+		flag = true
+	}
+
+	if !flag {
+		return models.Comment{}, errors.New(fmt.Sprintf("комментарий с данным (%d) ID не найден", comment_id))
+	}
+
+	return comment, nil
+}
+
+func (p *Provider) DeleteCommentById(login string, post_id int) error {
+	comment, err := p.GetCommentById(post_id)
+
+	if err != nil {
+		return err
+	}
+
+	if comment.Author != login {
+		return errors.New("автор комментария не совпадает. удаление невозможно " + login + comment.Author)
+	}
+
+	query := "UPDATE comments SET is_deleted = TRUE WHERE id = $1 AND is_deleted = FALSE"
+	result, err := p.UserDB.Exec(query, post_id)
+	if err != nil {
+		return err
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		var isDeleted bool
+		checkQuery := "SELECT is_deleted FROM comments WHERE id = $1"
+		err = p.UserDB.QueryRow(checkQuery, post_id).Scan(&isDeleted)
+		if errors.Is(err, sql.ErrNoRows) {
+			return errors.New("Ошибка: пост с ID " + strconv.Itoa(post_id) + " не найден.")
+		}
+		if err != nil {
+			return err
+		}
+		if isDeleted {
+			return errors.New("Ошибка: комментарий с ID " + strconv.Itoa(post_id) + " уже удален. Обновите данные.")
+		} else {
+			return errors.New(fmt.Sprintf("unknown error when deleting post with id %d", post_id))
+		}
+
+	}
+	return nil
 }

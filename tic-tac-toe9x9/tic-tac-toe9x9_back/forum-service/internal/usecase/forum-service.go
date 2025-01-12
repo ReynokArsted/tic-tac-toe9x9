@@ -55,3 +55,7 @@ func (u *Usecase) DeletePostById(login string, post_id int) error {
 func (u *Usecase) UpdatePost(post_id int, post models.Post) error {
 	return u.p.UpdatePost(post_id, post)
 }
+
+func (u *Usecase) DeleteCommentById(login string, post_id int) error {
+	return u.p.DeleteCommentById(login, post_id)
+}
