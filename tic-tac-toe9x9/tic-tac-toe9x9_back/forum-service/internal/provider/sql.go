@@ -141,7 +141,7 @@ func (p *Provider) GetPostById(post_id int) (models.AnswerPost, error) {
 
 	flag := false
 	for row.Next() {
-		err := row.Scan(&post.Id, &post.Title, &post.Content, &post.Author, &post.IsDeleted)
+		err := row.Scan(&post.Post_id, &post.Title, &post.Content, &post.Author, &post.IsDeleted)
 		if err != nil {
 			return models.AnswerPost{}, err
 		}
@@ -155,7 +155,17 @@ func (p *Provider) GetPostById(post_id int) (models.AnswerPost, error) {
 	return post, nil
 }
 
-func (p *Provider) DeletePostById(post_id int) error {
+func (p *Provider) DeletePostById(login string, post_id int) error {
+	post, err := p.GetPostById(post_id)
+
+	if err != nil {
+		return err
+	}
+
+	if post.Author != login {
+		return errors.New("автор поста не совпадает. удаление невозможно")
+	}
+
 	query := "UPDATE posts SET is_deleted = TRUE WHERE id = $1 AND is_deleted = FALSE"
 	result, err := p.UserDB.Exec(query, post_id)
 	if err != nil {
@@ -184,4 +194,20 @@ func (p *Provider) DeletePostById(post_id int) error {
 
 	}
 	return nil
+}
+
+func (p *Provider) UpdatePost(post_id int, post models.Post) error {
+	postToUpdate, err := p.GetPostById(post_id)
+	if err != nil {
+		return err
+	}
+	if postToUpdate.IsDeleted {
+		return errors.New(fmt.Sprintf("пост с данным (%d) ID удален", post_id))
+	}
+	if post.Author != postToUpdate.Author {
+		return errors.New("автор поста не совпадает. невозможно редактирование")
+	}
+	query := "UPDATE posts SET title = $2, content = $3 WHERE id = $1"
+	_, err = p.UserDB.Exec(query, post_id, post.Title, post.Content)
+	return err
 }

@@ -16,7 +16,7 @@ type Comment struct {
 }
 
 type AnswerPost struct {
-	Id        int    `json:"id"`
+	Post_id   int    `json:"id"`
 	Title     string `json:"title"`
 	Content   string `json:"content"`
 	Author    string `json:"login"`

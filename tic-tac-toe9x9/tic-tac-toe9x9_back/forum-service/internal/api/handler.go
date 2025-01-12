@@ -12,7 +12,7 @@ import (
 
 func (srv *Server) createPostHandler(c echo.Context) error {
 	if c.Request().Method != http.MethodPost {
-		return c.JSON(http.StatusMethodNotAllowed, "method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
 	}
 
 	var (
@@ -50,7 +50,7 @@ func (srv *Server) createPostHandler(c echo.Context) error {
 }
 func (srv *Server) createCommentHandler(c echo.Context) error {
 	if c.Request().Method != http.MethodPost {
-		return c.JSON(http.StatusMethodNotAllowed, "method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
 	}
 
 	var (
@@ -165,8 +165,60 @@ func (srv *Server) deletePostById(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]string{"error": err.Error()})
 	}
 
-	err = srv.uc.DeletePostById(post_id)
+	authHeader := c.Request().Header.Get("Authorization")
+	if authHeader == "" || len(authHeader) < 8 {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "необходимо предоставить заголовок авторизации"})
+	}
+	tokenString := authHeader[7:]                    // Извлекаем токен из заголовка "Bearer <token>"
+	claims, err := srv.uc.ValidationJWT(tokenString) // проверяем токен
 	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "невозможно верифицировать токен " + err.Error()})
+	}
+
+	login := claims.UserName
+
+	err = srv.uc.DeletePostById(login, post_id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+	return c.JSON(http.StatusOK, map[string]string{"error": ""})
+}
+
+func (srv *Server) updatePost(c echo.Context) error {
+	if c.Request().Method != http.MethodPatch {
+		return c.JSON(http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
+	}
+
+	var (
+		post models.Post
+	)
+	authHeader := c.Request().Header.Get("Authorization")
+	if authHeader == "" || len(authHeader) < 8 {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Отсутсвует токен JWT"})
+	}
+	tokenString := authHeader[7:]                    // Извлекаем токен из заголовка "Bearer <token>"
+	claims, err := srv.uc.ValidationJWT(tokenString) // проверяем токен
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "невозможно верифицировать токен " + err.Error()})
+	}
+	err = json.NewDecoder(c.Request().Body).Decode(&post)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid body request"})
+	}
+	if post.Author == "" || post.Title == "" || post.Content == "" {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "остались незаполненные поля"})
+	}
+	post.Author = claims.UserName
+	queryParams := c.QueryParams()
+	post_id, err := strconv.Atoi(queryParams.Get("post_id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Не удалось получить номер поста"})
+	}
+	err = srv.uc.UpdatePost(post_id, post)
+	if err != nil {
+		if err.Error() == "автор поста не совпадает. невозможно редактирование" || err.Error() == fmt.Sprintf("пост с данным (%d) ID удален", post_id) {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+		}
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
 	return c.JSON(http.StatusOK, map[string]string{"error": ""})

@@ -48,6 +48,10 @@ func (u *Usecase) GetPostById(post_id int) (models.AnswerPost, error) {
 	return u.p.GetPostById(post_id)
 }
 
-func (u *Usecase) DeletePostById(post_id int) error {
-	return u.p.DeletePostById(post_id)
+func (u *Usecase) DeletePostById(login string, post_id int) error {
+	return u.p.DeletePostById(login, post_id)
+}
+
+func (u *Usecase) UpdatePost(post_id int, post models.Post) error {
+	return u.p.UpdatePost(post_id, post)
 }
