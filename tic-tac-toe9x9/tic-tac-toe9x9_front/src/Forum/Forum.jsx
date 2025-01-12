@@ -109,7 +109,7 @@ export class Forum extends Component {
                 {this.context.UserIsLoged === true && 
                 <>
                 <Link to="/new_topic"><button>Создать новое обсуждение</button></Link>
-                <Link to="/edit_topic"><button>Редактировать созданные обсуждения</button></Link>
+                <Link to="/user_topics"><button>Редактировать созданные обсуждения</button></Link>
                 </>
                 }
                 <div className="list">

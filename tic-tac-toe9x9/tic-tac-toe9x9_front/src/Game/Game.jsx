@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Board from './Board';
 import { checkWinner } from './helpers';
 
-function Game() {
+export function Game() {
     const [board, setBoard] = useState(Array(9).fill(null).map(() => Array(9).fill(null)));
     const [currentPlayer, setCurrentPlayer] = useState('X');
     const [activeMiniBoard, setActiveMiniBoard] = useState(null);
@@ -75,5 +75,3 @@ function Game() {
         </div>
     );
 }
-
-export default Game;
