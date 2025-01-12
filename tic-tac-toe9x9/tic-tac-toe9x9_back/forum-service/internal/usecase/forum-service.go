@@ -14,7 +14,7 @@ func (u Usecase) AddComment(comment models.Comment) (int, error) {
 	return u.p.AddComment(comment)
 }
 
-func (u Usecase) CountOfPosts() (int, error) {
+func (u Usecase) CountOfPosts() (int, int, error) {
 	return u.p.CountOfPosts()
 }
 

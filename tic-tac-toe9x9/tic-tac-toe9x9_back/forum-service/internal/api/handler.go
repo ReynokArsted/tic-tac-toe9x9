@@ -48,6 +48,7 @@ func (srv *Server) createPostHandler(c echo.Context) error {
 	answer.Post_id = id
 	return c.JSON(http.StatusCreated, answer)
 }
+
 func (srv *Server) createCommentHandler(c echo.Context) error {
 	if c.Request().Method != http.MethodPost {
 		return c.JSON(http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
@@ -78,10 +79,9 @@ func (srv *Server) createCommentHandler(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, answer)
 	}
 	comment.Author = claims.UserName
-	fmt.Println(claims.UserName)
-	count, _ := srv.uc.CountOfPosts()
-	if comment.Post_id < 0 || comment.Post_id > count {
-		answer.Error = "несуществующий ID поста"
+	allcount, _, _ := srv.uc.CountOfPosts()
+	if comment.Post_id < 0 || comment.Post_id > allcount {
+		answer.Error = "несуществующий ID поста " + strconv.Itoa(allcount)
 		return c.JSON(http.StatusInternalServerError, answer)
 	}
 	id, err := srv.uc.AddComment(comment)
@@ -111,12 +111,13 @@ func (srv *Server) getPostsHandler(c echo.Context) error {
 
 func (srv *Server) getCountOfPostsHandler(c echo.Context) error {
 	var answer models.AnswerGetCountOfPosts
-	id, err := srv.uc.CountOfPosts()
-	answer.Count = id
+	_, count, err := srv.uc.CountOfPosts()
 	if err != nil {
 		answer.Error = err.Error()
 		return c.JSON(http.StatusInternalServerError, answer)
 	}
+	answer.Count = count
+
 	return c.JSON(http.StatusOK, answer)
 }
 

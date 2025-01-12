@@ -15,14 +15,19 @@ func (p *Provider) AddPost(post models.Post) (int, error) {
 	return id, err
 }
 
-func (p *Provider) CountOfPosts() (int, error) {
-	var count int
+func (p *Provider) CountOfPosts() (int, int, error) {
+	var count, allcount int
 	query := "SELECT COUNT(*) FROM posts WHERE is_deleted = FALSE"
 	err := p.UserDB.QueryRow(query).Scan(&count)
 	if err != nil {
-		return 0, err
+		return 0, 0, err
 	}
-	return count, nil
+	query = "SELECT COUNT(*) FROM posts"
+	err = p.UserDB.QueryRow(query).Scan(&allcount)
+	if err != nil {
+		return 0, 0, err
+	}
+	return allcount, count, nil
 }
 
 func (p *Provider) AddComment(comment models.Comment) (int, error) {
@@ -55,7 +60,7 @@ func (p *Provider) GetPosts(page int) (models.AnswerPagePosts, error) {
 		return models.AnswerPagePosts{}, errors.New("ошибка при сканировании строк: " + err.Error())
 	}
 
-	total, err := p.CountOfPosts()
+	_, total, err := p.CountOfPosts()
 	if err != nil {
 		return models.AnswerPagePosts{}, errors.New("ошибка при получении количества записей: " + err.Error())
 	}
@@ -112,7 +117,7 @@ func (p *Provider) GetComments(page, post_id int) (models.AnswerPageComments, er
 	if err != nil {
 		return models.AnswerPageComments{}, errors.New("ошибка при получении количества записей: " + err.Error())
 	}
-	if total < offset*10 {
+	if total < offset {
 		return models.AnswerPageComments{
 			Comments: comments,
 			Total:    total,
