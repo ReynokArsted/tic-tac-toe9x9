@@ -252,7 +252,7 @@ func (p *Provider) DeleteCommentById(login string, post_id int) error {
 	}
 
 	if comment.Author != login {
-		return errors.New("автор комментария не совпадает. удаление невозможно " + login + comment.Author)
+		return errors.New("автор комментария не совпадает. удаление невозможно")
 	}
 
 	query := "UPDATE comments SET is_deleted = TRUE WHERE id = $1 AND is_deleted = FALSE"
