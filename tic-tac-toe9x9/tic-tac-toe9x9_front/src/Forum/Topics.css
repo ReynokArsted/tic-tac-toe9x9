@@ -1,14 +1,14 @@
 .invisible {
     border: none;
     background: none;
-    color: slateblue;
+    color: #6a5acd;
     cursor: pointer;
     font-size: 16px;
     padding: 0;
 }
 
 .topic {
-    border: solid 3px slateblue;
+    border: solid 3px #6a5acd;
     border-radius: 5px;
     margin: 10px;
 }
