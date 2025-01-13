@@ -1,6 +1,7 @@
 import { Component } from "react"
 import { AppContext } from "../App/Context"
 import { Link } from "react-router-dom"
+import {} from "./Comments.css"
 
 export class NewTopic extends Component {
     static contextType = AppContext;
@@ -104,7 +105,8 @@ export class NewTopic extends Component {
     render() {
         const { ShowWarning, ToBack, errorKey, Title, Content } = this.state;
         return (
-            <>
+            <div className="m-plus-rounded-1c-regular"
+                style={{color: '#6a5acd'}}>
                 <h1>Создание нового обсуждения</h1>
                 <div>
                     <p>Название обсуждения</p>
@@ -167,7 +169,7 @@ export class NewTopic extends Component {
                         <button onClick={this.CreateTopicButton}>Создать</button>
                     </>
                 )}
-            </>
+            </div>
         );
     }
 }

@@ -3,7 +3,7 @@ import { Comments } from "./Comments";
 import { AppContext } from "../App/Context";
 import { Link } from "react-router-dom";
 import {} from "./TopicDis.css"
-import {} from "../GameRules/GameRules.css"
+import {} from "./Comments.css"
 
 export class TopicDis extends Component {
     static contextType = AppContext
@@ -212,12 +212,12 @@ export class TopicDis extends Component {
         }
 
         return (
-            <>
-                <h1>{Title}</h1>
+            <div className="m-plus-rounded-1c-regular">
+                <h1 style={{color: '#6a5acd'}}>{Title}</h1>
                 <div className="text">
                     {Content}
                 </div>
-                <div>
+                <div className="m-plus-rounded-1c-regular">
                     Автор: {Author}
                 </div>
                 {ShowCommentField === true && 
@@ -287,7 +287,7 @@ export class TopicDis extends Component {
                     Назад
                     </button>
                 )}
-            </>
+            </div>
         )
     }
 }
