@@ -1,0 +1,62 @@
+/* Контейнер формы входа */
+.signin-form {
+    border: 5px solid #F4F9B4;
+    border-radius: 8px;
+    padding: 20px 30px;
+    background-color: #fff;
+    width: 400px;
+}
+
+/* Стили для заголовка */
+.signin-form label:first-of-type {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #6a5acd;
+}
+
+/* Стили для полей ввода */
+.signin-form div {
+    margin-bottom: 15px;
+}
+
+.signin-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Кнопка входа */
+.signin-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #6a5acd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.signin-form button:hover {
+    background-color: #5a4ab0;
+}
+
+/* Сообщения об ошибках */
+.signin-form p {
+    color: #6a5acd;
+    text-align: center;
+}
+
+/* Ссылка на регистрацию */
+.signin-form a {
+    color: rgb(102, 212, 185);
+    text-decoration: none;
+}
+
+.signin-form a:hover {
+    text-decoration: underline;
+}

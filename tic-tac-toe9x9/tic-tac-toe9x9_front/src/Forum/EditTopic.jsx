@@ -1,6 +1,7 @@
 import { Component } from "react";
 import { AppContext } from "../App/Context";
 import { Link } from "react-router-dom";
+import {} from "./Comments.css"
 
 export class EditTopic extends Component {
     static contextType = AppContext;
@@ -28,8 +29,8 @@ export class EditTopic extends Component {
         this.setState({
             [name]: value,
             errorKey: null
-        });
-    };
+        })
+    }
 
     getPostInfo = async () => {
         const {ID} = this.state
@@ -126,7 +127,7 @@ export class EditTopic extends Component {
     }
 
     UpdateTopicButton = () => {
-        const { Title, Content} = this.state
+        const { Title, Content, OldContent, OldTitle} = this.state
 
         if (Title === "") {
             this.setState({ errorKey: 1 })
@@ -139,6 +140,11 @@ export class EditTopic extends Component {
 
         if (Title.startsWith(" ") || Title.endsWith(" ")) {
             this.setState({ errorKey: 3 })
+            return
+        }
+
+        if (OldContent === Content && OldTitle === Title) {
+            this.setState({ errorKey: 4 })
             return
         }
 
@@ -185,7 +191,7 @@ export class EditTopic extends Component {
         const { ShowWarning, ToBack, errorKey, OldTitle, 
             Title, OldContent, Content, ToDelete } = this.state
         return (
-            <>
+            <div className="m-plus-rounded-1c-regular">
                 <h1>Редактирование поста</h1>
                 <div>
                     <p>Название обсуждения</p>
@@ -233,6 +239,10 @@ export class EditTopic extends Component {
                     <p>
                         В начале или конце названия обсуждения есть пробелы. 
                         Пожалуйста, напишите без них!
+                    </p>}
+                    {errorKey === 4 && 
+                    <p>
+                        Ни название, ни содержимое не изменились!
                     </p>}
                 </div>
 
@@ -291,7 +301,7 @@ export class EditTopic extends Component {
                         <button onClick={this.ToDeleteButton}>Удалить пост</button>
                     </>
                 )}
-            </>
+            </div>
         )
     }
 }

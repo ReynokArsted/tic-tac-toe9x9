@@ -1,7 +1,8 @@
 import { Component } from "react";
 import { AppContext } from "../App/Context";
 import { Link, Navigate } from "react-router-dom";
-
+import {} from "../Forum/Comments.css"
+import {} from "./sign_in.css"
 
 export class SignIn extends Component {
     state = {
@@ -100,25 +101,44 @@ export class SignIn extends Component {
         }
 
         return (
-            <>
-                <label>Вход</label>
+            <div className="signin-form">
+                <label
+                    className="m-plus-rounded-1c-regular"
+                    style={{border: 'dashed 3px #6a5acd',}}>
+                    Вход
+                </label>
                 <div>
-                    <label>логин</label>
+                    <label className="m-plus-rounded-1c-regular">логин</label>
                     <input name="login" value={login} onChange={(e) => this.UpdateData(e)} />
                 </div>
                 <div>
-                    <label>пароль</label>
-                    <input type={showPasswordKey ? "text" : "password"} name="password" value={password} onChange={(e) => this.UpdateData(e)} />
-                    <button onClick={this.ShowPassword}>{showPasswordKey ? "Скрыть" : "Показать"}</button>
+                    <label className="m-plus-rounded-1c-regular">пароль</label>
+                    <input 
+                        type={showPasswordKey ? "text" : "password"} 
+                        name="password" value={password} 
+                        onChange={(e) => this.UpdateData(e)}/>
+                    <button 
+                        className="m-plus-rounded-1c-regular" 
+                        onClick={this.ShowPassword}>
+                            {showPasswordKey ? "Скрыть" : "Показать"}
+                    </button>
                 </div>
-                <button onClick={this.LogButtonClicked}>Войти</button>
-                <p>Впервые тут? Тогда можно <Link to="/sign_up">зарегистироваться</Link></p>
+                <button 
+                    className="m-plus-rounded-1c-regular" 
+                    onClick={this.LogButtonClicked}>
+                        Войти
+                </button>
+                <p className="m-plus-rounded-1c-regular">
+                    Впервые тут? Тогда можно 
+                    <Link className="m-plus-rounded-1c-regular" to="/sign_up">
+                    зарегистироваться
+                    </Link></p>
                 {errorKey === 1 && <p>Одно или более полей пусты<br></br>
                     Пожалуйста, заполните пустые поля!</p>}
                 {errorKey === 2 && <p>В начале или конце {errorPlace} есть пробелы<br></br>
                     Пожалуйста, напишите без них!</p>}
                 {SignInError !== "" && <p>Ошибка: {SignInError}</p>}
-            </>
+            </div>
         )
     }
 }
