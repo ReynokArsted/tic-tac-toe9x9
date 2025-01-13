@@ -6,15 +6,22 @@ export class EditTopic extends Component {
     static contextType = AppContext;
     state = {
         ID: this.context.PostID,
-        Title: this.props.postData ? this.props.postData.title : "",
-        Content: this.props.postData ? this.props.postData.content : "",
-        Author: this.context.Login,
+        OldTitle: "",
+        Title: "",
+        OldContent: "",
+        Content: "",
+        Author: "",
         errorKey: null,
         ShowWarning: false,
         TempTitle: "",
         TempContent: "",
-        ToBack: false
-    };
+        ToBack: false,
+        ToDelete: false
+    }
+
+    componentDidMount() {
+        this.getPostInfo()
+    }
 
     Update = (e) => { 
         const { name, value } = e.target;
@@ -24,71 +31,142 @@ export class EditTopic extends Component {
         });
     };
 
+    getPostInfo = async () => {
+        const {ID} = this.state
+        try {
+            const response = await fetch(`http://localhost:9091/getPostById?post_id=${ID}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : `Bearer ${this.context.UserToken}`
+                }
+            })
+            const result = await response.json()
+            if (result.error !== "") {
+                this.setState({PostError : result.error})
+            } else {
+                this.setState({
+                    OldTitle: result.title,
+                    Title: result.title,
+                    OldContent: result.content,
+                    Content: result.content,
+                    Author: result.login
+                })
+            }
+            console.log("Ответ от API: ", result)
+        }
+        catch(error) {
+            console.error("Ошибка: ", error)
+        }
+    }
+
     UpdateTopic = async (postData) => {
         const { ID } = this.state
-        const jsonData = JSON.stringify(postData);
+        const jsonData = JSON.stringify(postData)
         try {
-            const response = await fetch(`http://localhost:9091/updatePost/${ID}`, {
-                method: 'PUT', 
+            const response = await fetch(`http://localhost:9091/updatePost?post_id=${ID}`, {
+                method: 'PATCH', 
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${this.context.UserToken}`
                 },
                 body: jsonData
-            });
+            })
             if (response.ok != null) {
-                console.log(response);
+                console.log(response)
             }
-            const result = await response.json();
-            console.log("Ответ от API:", result);
+            const result = await response.json()
+            console.log("Ответ от API:", result)
         } catch (error) {
-            console.error("Ошибка:", error);
+            console.error("Ошибка:", error)
         }
-    };
+    }
+
+    DeletePost = async () => { 
+        const {ID} = this.state
+        try {
+            const response = await fetch(`http://localhost:9091/deletePostById?post_id=${ID}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : `Bearer ${this.context.UserToken}`
+                }
+            })
+            const result = await response.json()
+            if (result.error !== "") {
+                this.setState({PostError : result.error})
+            } else {
+                this.setState({
+                    OldTitle: "",
+                    Title: "",
+                    OldContent: "",
+                    Content: "",
+                    Author: "",
+                    ToDelete: false
+                })
+            }
+            console.log("Ответ от API: ", result)
+        }
+        catch(error) {
+            console.error("Ошибка: ", error)
+        }
+    }
+
+    ToDeleteButton = () => {
+        const { Title, Content } = this.state
+        if (Title.trim() !== "" || Content.trim() !== "") {
+            this.setState({
+                ShowWarning: true,
+                TempTitle: Title,
+                TempContent: Content,
+                ToBack: true,
+                ToDelete: true
+            })
+        }
+    }
 
     UpdateTopicButton = () => {
-        const { Title, Content, Author } = this.state;
+        const { Title, Content} = this.state
 
         if (Title === "") {
-            this.setState({ errorKey: 1 });
-            return;
+            this.setState({ errorKey: 1 })
+            return
         }
         if (Content === "") {
-            this.setState({ errorKey: 2 });
-            return;
+            this.setState({ errorKey: 2 })
+            return
         }
 
         if (Title.startsWith(" ") || Title.endsWith(" ")) {
-            this.setState({ errorKey: 3 });
-            return;
+            this.setState({ errorKey: 3 })
+            return
         }
 
         const data = {
             title: Title,
             content: Content,
-            login: Author
-        };
+        }
 
-        this.UpdateTopic(data);
+        this.UpdateTopic(data)
 
         this.setState({
             Title: "",
             Content: "",
             errorKey: 0
-        });
-    };
+        })
+    }
 
     ToBackButton = () => {
-        const { Title, Content } = this.state;
+        const { Title, Content } = this.state
         if (Title.trim() !== "" || Content.trim() !== "") {
             this.setState({
                 ShowWarning: true,
                 TempTitle: Title,
                 TempContent: Content,
                 ToBack: true
-            });
+            })
         }
-    };
+    }
 
     confirmHideComField = () => {
         this.setState({
@@ -96,21 +174,27 @@ export class EditTopic extends Component {
             Content: "",
             ShowWarning: false,
             ToBack: false
-        });
-    };
+        })
+    }
 
     cancelHideComField = () => {
-        this.setState({ ShowWarning: false });
-    };
+        this.setState({ ShowWarning: false })
+    }
 
     render() {
-        const { ShowWarning, ToBack, errorKey, Title, Content } = this.state;
+        const { ShowWarning, ToBack, errorKey, OldTitle, 
+            Title, OldContent, Content, ToDelete } = this.state
         return (
             <>
                 <h1>Редактирование поста</h1>
                 <div>
                     <p>Название обсуждения</p>
-                    <input type="text" name="Title" onChange={(e) => this.Update(e)} value={Title}></input>
+                    <input 
+                    type="text" 
+                    name="Title" 
+                    onChange={(e) => this.Update(e)} 
+                    value={Title}>
+                    </input>
                 </div>
                 <div>
                     <p>Описание</p>
@@ -118,7 +202,6 @@ export class EditTopic extends Component {
                         id="large-text"
                         name="Content"
                         onChange={(e) => this.Update(e)}
-                        placeholder="Тут можно написать о своих идеях или других предложениях"
                         rows={10}
                         cols={45}
                         value={Content}
@@ -134,39 +217,78 @@ export class EditTopic extends Component {
                             resize: "none"
                         }}
                     />
-                    {errorKey === 0 && <p>Пост успешно обновлен!</p>}
-                    {errorKey === 1 && <p>Поле с названием обсуждения оказалось пустым. Пожалуйста, заполните это поле!</p>}
-                    {errorKey === 2 && <p>Поле с текстом обсуждения оказалось пустым. Пожалуйста, заполните это поле!</p>}
-                    {errorKey === 3 && <p>В начале или конце названия обсуждения есть пробелы. Пожалуйста, напишите без них!</p>}
+                    {errorKey === 0 && 
+                    <p>
+                        Пост успешно обновлен!
+                    </p>}
+                    {errorKey === 1 && 
+                    <p>
+                        Поле с названием обсуждения оказалось пустым. Пожалуйста, заполните это поле!
+                    </p>}
+                    {errorKey === 2 && 
+                    <p>
+                        Поле с текстом обсуждения оказалось пустым. Пожалуйста, заполните это поле!
+                    </p>}
+                    {errorKey === 3 && 
+                    <p>
+                        В начале или конце названия обсуждения есть пробелы. 
+                        Пожалуйста, напишите без них!
+                    </p>}
                 </div>
 
                 {ShowWarning && (
                     <div className="background">
                         <div className="warning m-plus-rounded-1c-regular">
-                            <p>Содержимое поста будет стёрто. Продолжить?</p>
-                            {ToBack ? (
-                                <Link to="/forum">
-                                    <button onClick={this.confirmHideComField} style={{ marginRight: '10px' }}>Да</button>
+                            {ToDelete === true ? 
+                                <p>Пост будет удалён безвозвратно<br></br>Продолжить?</p> 
+                            :
+                                <p>Содержимое поста будет стёрто<br></br>Продолжить?</p>
+                            }
+                            {ToBack === true ? (
+                                <Link to="/user_topics">
+                                    {ToDelete === true ? 
+                                        <button 
+                                            onClick={() => {
+                                                this.confirmHideComField()
+                                                this.DeletePost()
+                                            }} 
+                                            style={{ marginRight: '10px' }}>
+                                            Да
+                                        </button>
+                                    :
+                                        <button 
+                                            onClick={this.confirmHideComField} 
+                                            style={{ marginRight: '10px' }}>
+                                            Да
+                                        </button>
+                                    }
                                 </Link>
                             ) : (
-                                <button onClick={this.confirmHideComField} style={{ marginRight: '10px' }}>Да</button>
+                                <button 
+                                    onClick={this.confirmHideComField} 
+                                    style={{ marginRight: '10px' }}>
+                                    Да
+                                </button>
                             )}
                             <button onClick={this.cancelHideComField}>Нет</button>
                         </div>
                     </div>
                 )}
 
-                {(Title.trim() === "" && Content.trim() === "") ? (
+                {((Title.trim() === "" && Content.trim() === "") || 
+                (Title.trim() === OldTitle && Content.trim() === OldContent)) ? (
                     <>
-                        <Link to="/forum">
+                        <Link to="/user_topics">
                             <button>Назад</button>
                         </Link>
                         <button onClick={this.UpdateTopicButton}>Обновить</button>
+                        <button onClick={this.ToDeleteButton}>Удалить пост</button>
                     </>
                 ) : (
                     <>
                         <button onClick={this.ToBackButton}>Назад</button>
                         <button onClick={this.UpdateTopicButton}>Обновить</button>
+                        <button onClick={this.ToDeleteButton}>Удалить пост</button>
                     </>
                 )}
             </>
