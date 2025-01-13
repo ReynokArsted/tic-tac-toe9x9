@@ -13,38 +13,62 @@ export class UserTopics extends Component {
         Page: 1,
         Loading: false,
         Error: ""
-    };
+    }
 
     static contextType = AppContext
 
     fetchData = async () => {
-        const { Page } = this.state
-        const userLogin = this.context.Login
-
+        //const { Page } = this.state;
+        const userLogin = this.context.Login;
+    
         try {
-            const response = await fetch(`http://localhost:9091/getPosts?page=${Page}`, {
+            // Сначала получаем количество страниц (или предполагаемое количество страниц)
+            const response = await fetch(`http://localhost:9091/getPosts?page=1`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.context.UserToken}`
                 },
             });
-            const result = await response.json()
-
+            const result = await response.json();
+    
             if (result.error !== "") {
-                this.setState({ Error: result.error })
+                this.setState({ Error: result.error });
             } else {
-                // Выборка постов по логину
-                const userPosts = result.posts.filter(post => post.login === userLogin)
-
+                // Определяем количество страниц на сервере
+                const totalPages = Math.ceil(result.total / 10)
+    
+                let allPosts = []  // Массив для хранения всех постов
+    
+                // Перебираем все страницы
+                for (let page = 1; page <= totalPages; page++) {
+                    const responsePage = await fetch(`http://localhost:9091/getPosts?page=${page}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.context.UserToken}`
+                        },
+                    });
+                    const pageResult = await responsePage.json();
+    
+                    // Фильтруем посты по логину пользователя
+                    const userPosts = pageResult.posts.filter(post => post.login === userLogin);
+    
+                    // Добавляем посты на текущей странице в общий массив
+                    allPosts = [...allPosts, ...userPosts]
+                }
+    
+                // Обновляем состояние с объединенными постами
                 this.setState({
-                    Posts: userPosts,
-                    NumberPages: Math.ceil(userPosts.length / 10),
-                    Total: userPosts.length,
+                    Posts: allPosts,
+                    NumberPages: Math.ceil(allPosts.length / 10),
+                    Total: allPosts.length,
                     PageSize: result.page_size,
-                    Page: result.page,
+                    Page: 1, // Мы начинаем с первой страницы
                     Error: ""
                 })
             }
+    
             console.log("Ответ от API:", result)
         } catch (error) {
             console.error("Ошибка:", error)
@@ -129,7 +153,7 @@ export class UserTopics extends Component {
                 <div className="list">
                     {Posts.length > 0 ? (
                         <>
-                            <p>Какое обсуждение будем редактировать?</p>
+                            <p>Какое обсуждение будем редактировать? {"( "}всего {Posts.length} обсуждений{" )"}</p>
                             <Topics data={Posts}/>
                         </>
                     ) : (
@@ -138,6 +162,6 @@ export class UserTopics extends Component {
                 </div>
                 <Link to="/forum"><button>Назад</button></Link>
             </>
-        );
+        )
     }
 } 

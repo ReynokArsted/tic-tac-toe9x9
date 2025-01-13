@@ -28,12 +28,10 @@ export class TopicDis extends Component {
         NewContent: "",
         NewAuthor: this.context.Login,
         ToBack: false,
-        
         errorKey: null
     }
 
     componentDidMount() {
-        console.log(this.context)
         this.getPostInfo()
         this.fetchData()
     }
@@ -141,11 +139,10 @@ export class TopicDis extends Component {
         }
 
         await this.CreateComment(data)
-        this.fetchData()
+        await this.fetchData()
 
         this.setState ({
             NewContent: "",
-            NewAuthor: "",
             ShowCommentField: false,
             errorKey: 0
         })
@@ -194,6 +191,10 @@ export class TopicDis extends Component {
         }
     }
 
+    UpdateCom = async () => {
+        await this.fetchData()
+    }    
+
     render() {
             const {Content, ComLoading, 
                 PostError, ComError, Title, Author, 
@@ -217,7 +218,7 @@ export class TopicDis extends Component {
                     {Content}
                 </div>
                 <div>
-                    {Author}
+                    Автор: {Author}
                 </div>
                 {ShowCommentField === true && 
                 <>
@@ -249,7 +250,7 @@ export class TopicDis extends Component {
                 {ShowWarning && (
                     <div className="background">
                         <div className="warning m-plus-rounded-1c-regular">
-                            <p>Содержимое комментария будет стёрто. Продолжить?</p>
+                            <p>Содержимое комментария будет стёрто<br></br>Продолжить?</p>
                             {ToBack === false ? 
                                 <button 
                                     onClick={this.confirmHideComField} 
@@ -273,7 +274,10 @@ export class TopicDis extends Component {
                 )}
 
                 {CommentsList === null ? 
-                <p>Комментарии отсутствуют</p> : <Comments data={CommentsList}/>}
+                    <p>Комментарии отсутствуют</p> 
+                : 
+                    <Comments data={CommentsList} onUpdate={this.fetchData}
+                />}
                 {NewContent.trim() === "" ? (
                     <Link to="/forum">
                         <button>Назад</button>

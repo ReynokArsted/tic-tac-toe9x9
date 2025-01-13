@@ -83,6 +83,7 @@ function App() {
 
   const [PostID, setPostID] = useState(0)
   const [UserIsCreator, setUserState] = useState(false)
+  const [IsUpdate, setUpdate] = useState(false)
 
   const login = (data) => {
     setUserIsLoged(true)
@@ -141,12 +142,17 @@ function App() {
     setUserState(state)
   }
 
+  const Update = () => {
+    setUpdate(!IsUpdate)
+  }
+
   return (
   <AppContext.Provider value={
     {UserIsLoged, Login, UserName, Password, UserAvatarForPanel, 
     UserAvatarForProfile, Wins, Loses, UserToken, login, 
     logout, setName, setLogin, setPassword, setAvatar, 
-    setWins, setLoses, setToken, PostID, setPosID, UserIsCreator, setCreator
+    setWins, setLoses, setToken, PostID, setPosID, 
+    UserIsCreator, setCreator, IsUpdate, Update
     }}>
         <div className="App">
           <RouterProvider router={router}></RouterProvider>
