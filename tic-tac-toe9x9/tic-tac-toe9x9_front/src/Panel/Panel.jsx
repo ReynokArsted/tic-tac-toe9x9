@@ -27,8 +27,24 @@ export class Panel extends Component {
                             :
                             <>
                                 <Link className="boarded" to="/forum">Форум</Link>
-                                <Link to="/profile">{UserName}
-                                    <img src={UserAvatarForPanel} alt=""></img>
+                                <Link style={{
+                                    color: "#F4F9B4",
+                                    marginLeft: "5px",
+                                    marginRight: "5px"
+                                    }} to="/profile">
+                                        <span
+                                        href="#"
+                                        style={{
+                                        marginLeft: "5px",
+                                        marginRight: "5px"
+                                        }}>
+                                            {UserName}
+                                        </span>
+                                    <img 
+                                        style={{
+                                            border: 'solid 0px white',
+                                        }}
+                                        src={UserAvatarForPanel} alt=""></img>
                                 </Link>
                                 <Link className="boarded" onClick={logout}>Выйти</Link>
                             </>

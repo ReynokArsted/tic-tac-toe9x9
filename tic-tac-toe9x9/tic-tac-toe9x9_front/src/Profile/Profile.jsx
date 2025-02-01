@@ -1,5 +1,7 @@
 import { Component } from "react";
 import { AppContext } from "../App/Context"
+import {} from "./Profile.css"
+import {} from "../Forum/Comments.css"
 
 export class Profile extends Component {
     
@@ -7,24 +9,18 @@ export class Profile extends Component {
     render(){
         const {UserName, UserAvatarForProfile, Wins, Loses} = this.context
         return (
-            <>
+            <div className="m-plus-rounded-1c-regular profile_border">
                 <div>
                     <img src={UserAvatarForProfile} alt=""></img>
-                    <p>{UserName}</p>
+                    <p>Имя: {UserName}</p>
                 </div>
-                <div>
+                <div className="profile_data">
                     <info>
                         <p href="#">Количество побед: {Wins}</p>
                         <p href="#">Количество поражений: {Loses}</p>
-                        <p>Статус: </p>
                     </info>
                 </div>
-                <div>
-                    <posts>
-                        Посты
-                    </posts>
-                </div>
-            </>
+            </div>
         )
     }
 }

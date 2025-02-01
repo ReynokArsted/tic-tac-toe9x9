@@ -1,0 +1,36 @@
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000
+}
+
+.warning {
+    background-color: #fcfcfc;
+    padding: 20px;
+    border: dashed 5px #6a5acd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    width: 300px;
+    text-align: center;
+    font-size: 18px;
+    color: #6a5acd;
+}
+
+.postText {
+    width: 50%; /* Устанавливает ширину в процентах относительно родителя */
+    min-height: 75px; /* Минимальная высота */
+    padding: 10px; /* Внутренний отступ */
+    border: 1px solid #ccc; /* Граница */
+    border-radius: 4px; /* Закругление углов */
+    font-size: 16px; /* Размер шрифта */
+    line-height: 1.5; /* Межстрочный интервал */
+    margin: 10px;
+    resize: none
+}

@@ -11,16 +11,26 @@ export class Topic extends Component {
 
     render() {
         const {topic} = this.props
-        //console.log(topic.id)
 
         return ( 
         <>
             <div className="topic">
-                <Link 
-                to={{pathname: "/topic"}}>
-                    <button className="invisible" onClick={this.setID}>{topic.title}</button>
-                </Link>
-                <p>{topic.login}</p>
+                {this.context.UserIsCreator === false ? 
+                <>
+                    <Link to={{pathname: "/topic"}}>
+                        <button className="invisible" onClick={this.setID}>{topic.title}</button>
+                    </Link>
+                    <p>{topic.login}</p>
+                </>
+                : 
+                <>
+                    <Link 
+                        to={{pathname: "/edit_topic"}}>
+                        <button className="invisible" onClick={this.setID}>{topic.title}</button>
+                    </Link>
+                    <p>{topic.login}</p>
+                </>
+                }
             </div>
         </>
         )

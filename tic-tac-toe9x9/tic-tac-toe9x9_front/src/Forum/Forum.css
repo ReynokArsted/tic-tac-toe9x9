@@ -8,3 +8,7 @@
     display: flex;
     gap: 5px;
 }
+
+.forum_text {
+    color: #6a5acd;
+}

@@ -11,9 +11,10 @@ import { Profile } from '../Profile/Profile';
 import { Forum } from '../Forum/Forum';
 import { TopicDis } from '../Forum/TopicDis';
 import { NewTopic } from '../Forum/NewTopic';
-import { EditTopic } from '../Forum/EditTopic';
 import { GameRules } from '../GameRules/GameRules';
-import Game from '../Game/Game';
+import { UserTopics } from '../Forum/UserTopics';
+import { Game } from '../Game/Game';
+import { EditTopic } from '../Forum/EditTopic';
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
         element: <NewTopic/>
       },
       {
+        path: '/user_topics',
+        element: <UserTopics/>
+      },
+      {
         path: '/edit_topic',
         element: <EditTopic/>
       }
@@ -77,6 +82,8 @@ function App() {
   const [UserToken, setUserToken] = useState("")
 
   const [PostID, setPostID] = useState(0)
+  const [UserIsCreator, setUserState] = useState(false)
+  const [IsUpdate, setUpdate] = useState(false)
 
   const login = (data) => {
     setUserIsLoged(true)
@@ -129,7 +136,14 @@ function App() {
 
   const setPosID = (id) => {
     setPostID(id)
-    console.log("ID" + id)
+  }
+
+  const setCreator = (state) => {
+    setUserState(state)
+  }
+
+  const Update = () => {
+    setUpdate(!IsUpdate)
   }
 
   return (
@@ -137,7 +151,8 @@ function App() {
     {UserIsLoged, Login, UserName, Password, UserAvatarForPanel, 
     UserAvatarForProfile, Wins, Loses, UserToken, login, 
     logout, setName, setLogin, setPassword, setAvatar, 
-    setWins, setLoses, setToken, PostID, setPosID
+    setWins, setLoses, setToken, PostID, setPosID, 
+    UserIsCreator, setCreator, IsUpdate, Update
     }}>
         <div className="App">
           <RouterProvider router={router}></RouterProvider>

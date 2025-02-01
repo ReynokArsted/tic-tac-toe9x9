@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Topics } from "./Topics";
 import { AppContext } from "../App/Context";
 import {} from "./Forum.css"
+import {} from "./Comments.css"
 
 export class Forum extends Component {
     state = {
@@ -93,11 +94,11 @@ export class Forum extends Component {
         }
 
         return (
-            <>
+            <div className="m-plus-rounded-1c-regular">
                 <div className="top_block">
-                    <h1>Темы для обсуждений</h1>
-                    <div className="pages_clicker">
-                        <button onClick={this.toPrevPage} disabled={Page === 1}>
+                    <h1 className="forum_text">Темы для обсуждений</h1>
+                    <div className="forum_text pages_clicker">
+                        <button  onClick={this.toPrevPage} disabled={Page === 1}>
                             {'<'}
                         </button>
                         <button onClick={this.toNextPage} disabled={Page === NumberPages}>
@@ -107,15 +108,15 @@ export class Forum extends Component {
                     </div>
                 </div>
                 {this.context.UserIsLoged === true && 
-                <>
+                <div className="forum_text">
                 <Link to="/new_topic"><button>Создать новое обсуждение</button></Link>
-                <Link to="/edit_topic"><button>Редактировать созданные обсуждения</button></Link>
-                </>
+                <Link to="/user_topics"><button>Редактировать созданные обсуждения</button></Link>
+                </div>
                 }
                 <div className="list">
                 <Topics data={Posts}/>
                 </div>
-            </>
+            </div>
         );
         
     }

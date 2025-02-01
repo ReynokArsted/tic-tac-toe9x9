@@ -1,7 +1,9 @@
 import { Component } from "react";
 import { Comments } from "./Comments";
-import { Link } from "react-router-dom";
 import { AppContext } from "../App/Context";
+import { Link } from "react-router-dom";
+import {} from "./TopicDis.css"
+import {} from "./Comments.css"
 
 export class TopicDis extends Component {
     static contextType = AppContext
@@ -19,19 +21,23 @@ export class TopicDis extends Component {
         Page: 1,
         ComLoading: true,
         ComError: "",
-        ShowCommentField: false
+        ShowCommentField: false,
+        ShowWarning: false,
+        Temp: "",
+        // New Comment
+        NewContent: "",
+        NewAuthor: this.context.Login,
+        ToBack: false,
+        errorKey: null
     }
 
-    
     componentDidMount() {
-        console.log(this.context)
         this.getPostInfo()
         this.fetchData()
     }
 
     getPostInfo = async () => {
         const {ID} = this.state
-        //this.setState({ID: this.context.PostID})
 
         try {
             const response = await fetch(`http://localhost:9091/getPostById?post_id=${ID}`, {
@@ -89,16 +95,110 @@ export class TopicDis extends Component {
             }
     }
 
-    showComField = (key) => {
+    Update = (e) => { 
+        const {value} = e.target
         this.setState({
-            ShowCommentField: key
+            NewContent: value,
+            errorKey: null
         })
     }
+
+    CreateComment = async (postData) => {
+        const jsonData = JSON.stringify(postData);
+        try {
+            const response = await fetch("http://localhost:9091/createComment", {
+                method: 'POST', 
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Authorization' : `Bearer ${this.context.UserToken}`
+                },
+                body: jsonData
+            })
+            if (response.ok != null) {
+                console.log(response)
+            }
+            const result = await response.json()
+            console.log("Ответ от API:", result);
+            } catch (error) {
+                console.error("Ошибка:", error);
+            }
+    }
+
+    CreateCommentButton = async () => {
+        const {ID, NewContent, NewAuthor} = this.state
+
+        if (NewContent === "") {
+            this.setState({errorKey: 2})
+            return
+        }
+
+        const data = {
+            post_id: ID,
+            content: NewContent,
+            login: NewAuthor
+        }
+
+        await this.CreateComment(data)
+        await this.fetchData()
+
+        this.setState ({
+            NewContent: "",
+            ShowCommentField: false,
+            errorKey: 0
+        })
+    }
+
+    showComField = (key) => {
+        if (key === false && this.state.ShowCommentField) {
+            const content = document.getElementById("large-text")?.value || ""
+            if (content.trim() !== "") {
+                this.setState({
+                    ShowWarning: true,
+                    Temp: content,
+                })
+                return
+            }
+        }
+
+        this.setState({
+            ShowCommentField: key,
+        })
+    }
+
+    confirmHideComField = () => {
+        this.setState({
+            NewContent: "",
+            ShowCommentField: false,
+            ShowWarning: false,
+            ToBack: false
+        })
+    }
+
+    cancelHideComField = () => {
+        this.setState({
+            ShowWarning: false
+        })
+    }
+
+    ToBackButton = () => {
+        const content = document.getElementById("large-text")?.value || ""
+        if (content.trim() !== "") {
+            this.setState({
+                ShowWarning: true,
+                Temp: content,
+                ToBack: true
+            })
+        }
+    }
+
+    UpdateCom = async () => {
+        await this.fetchData()
+    }    
 
     render() {
             const {Content, ComLoading, 
                 PostError, ComError, Title, Author, 
-                CommentsList, ShowCommentField} = this.state;
+                CommentsList, ShowCommentField, ShowWarning, NewContent, ToBack} = this.state;
 
         if (ComLoading) {
             return <p>Загрузка...</p>;
@@ -112,43 +212,82 @@ export class TopicDis extends Component {
         }
 
         return (
-            <>
-                <h1>{Title}</h1>
+            <div className="m-plus-rounded-1c-regular">
+                <h1 style={{color: '#6a5acd'}}>{Title}</h1>
                 <div className="text">
                     {Content}
                 </div>
-                <div>
-                    {Author}
+                <div className="m-plus-rounded-1c-regular">
+                    Автор: {Author}
                 </div>
-                {ShowCommentField === true ? 
+                {ShowCommentField === true && 
                 <>
-                    <textarea 
+                    <textarea
+                    onChange={(e) => this.Update(e)}
+                    className="postText"
                     id="large-text"
-                    name="Content"
-                    placeholder="Тут можно написать о своих идеях или других предложениях"
-                    rows={10} // Высота в строках
-                    cols={45} // Ширина в символах
-                    style={{
-                        width: '100%', // Устанавливает ширину в процентах относительно родителя
-                        minHeight: '150px', // Минимальная высота
-                        padding: '10px', // Внутренний отступ
-                        border: '1px solid #ccc', // Граница
-                        borderRadius: '4px', // Закругление углов
-                        fontSize: '16px', // Размер шрифта
-                        lineHeight: '1.5', // Межстрочный интервал
-                        margin: "10px"
-                    }}
+                    name="NewContent"
+                    placeholder="Тут можно написать свой комментарий"
+                    rows={10}
+                    cols={45}
                     />
-                    <button onClick={() => this.showComField(true)}>Убрать поле</button>
-                    <button>Отправить</button>
+                    <div>
+                        <button onClick={() => this.showComField(false)}>
+                            Убрать поле
+                        </button>
+                        <button onClick={this.CreateCommentButton}>Создать комментарий</button>
+                    </div>
                 </>
-                : 
-                <button onClick={() => this.showComField(false)}>Добавить коментарий</button>
                 }
+
+                {this.context.UserIsLoged === true && ShowCommentField === false && 
+                <>
+                <button onClick={() => this.showComField(true)}>Добавить коментарий</button>
+                </>
+                }
+
+                
+                {ShowWarning && (
+                    <div className="background">
+                        <div className="warning m-plus-rounded-1c-regular">
+                            <p>Содержимое комментария будет стёрто<br></br>Продолжить?</p>
+                            {ToBack === false ? 
+                                <button 
+                                    onClick={this.confirmHideComField} 
+                                    style={{ marginRight: '10px' }}>
+                                    Да
+                                </button>
+                                :
+                                <Link to={"/forum"}>
+                                    <button 
+                                        onClick={this.confirmHideComField}
+                                        style={{ marginRight: '10px'}}>
+                                        Да
+                                    </button>
+                                </Link>
+                            }
+                            <button onClick={this.cancelHideComField}>
+                                Нет
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 {CommentsList === null ? 
-                <p>Комментарии отсутствуют</p> : <Comments data={CommentsList}/>}
-                <Link to="/forum"><button>Назад</button></Link>
-            </>
+                    <p>Комментарии отсутствуют</p> 
+                : 
+                    <Comments data={CommentsList} onUpdate={this.fetchData}
+                />}
+                {NewContent.trim() === "" ? (
+                    <Link to="/forum">
+                        <button>Назад</button>
+                    </Link>
+                ) : (
+                <button onClick={this.ToBackButton}>
+                    Назад
+                    </button>
+                )}
+            </div>
         )
     }
 }

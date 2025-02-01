@@ -1,6 +1,8 @@
 import { Component } from "react";
 import { AppContext } from "../App/Context";
 import { Link, Navigate } from "react-router-dom";
+import {} from "./sign_up.css";
+import {} from "../Forum/Comments.css"
 
 export class SignUp extends Component {
     state = {
@@ -107,36 +109,61 @@ export class SignUp extends Component {
         }
 
         return (
-            <>
-                <label>Регистрация</label>
+            <div className="registration-form" >
+                <label 
+                className="m-plus-rounded-1c-regular"
+                style={{border: 'dashed 3px #6a5acd',}}
+                >
+                    Регистрация
+                </label>
                 <div>
-                    <label>логин</label>
+                    <label className="m-plus-rounded-1c-regular">логин</label>
                     <input name="login" value={login} onChange={(e) => this.UpdateData(e)}/>
                 </div>
                 <div>
-                    <label>пароль</label>
+                    <label className="m-plus-rounded-1c-regular">пароль</label>
                     <input 
                     type={showPasswordKey ? "text" : "password"} 
                     name="password" value={password} 
                     onChange={(e) => this.UpdateData(e)}
                     />
                     <button 
-                    onClick={this.ShowPassword}>{showPasswordKey ? "Скрыть" : "Показать"}
+                        onClick={this.ShowPassword}
+                        className="m-plus-rounded-1c-regular">
+                            {showPasswordKey ? "Скрыть" : "Показать"}
                     </button>
                 </div>
                 <div>
-                    <label>имя игрока/никнейм</label>
+                    <label className="m-plus-rounded-1c-regular">имя игрока/никнейм</label>
                     <input name="name" value={name} onChange={(e) => this.UpdateData(e)}/>
                 </div>
-                <button onClick={this.LogButtonClicked}>Зарегистироваться</button>
-                <p>Уже зарегистрированы? Тогда можно <Link to="/sign_in">войти</Link></p>
-                {errorKey === 0 && <p>Регистрация прошла успешно!</p>}
-                {errorKey === 1 && <p>Одно или более полей пусты<br></br>
-                Пожалуйста, заполните пустые поля!</p>}
-                {errorKey === 2 && <p>В начале или конце {errorPlace} есть пробелы<br></br>
-                Пожалуйста, напишите без них!</p>}
-                {SignUpError !== "" && <p>Ошибка: {SignUpError}</p>}
-            </>
+                <button 
+                    className="m-plus-rounded-1c-regular"
+                    onClick={this.LogButtonClicked}>
+                        Зарегистироваться
+                </button>
+                <p 
+                    className="m-plus-rounded-1c-regular">
+                        Уже зарегистрированы? Тогда можно  
+                    <Link to="/sign_in">{"->"}войти</Link>
+                </p>
+                {errorKey === 0 && 
+                <p className="m-plus-rounded-1c-regular">
+                    Регистрация прошла успешно!
+                </p>}
+                {errorKey === 1 && 
+                <p className="m-plus-rounded-1c-regular">
+                    Одно или более полей пусты<br></br>
+                    Пожалуйста, заполните пустые поля!
+                </p>}
+                {errorKey === 2 && <p className="m-plus-rounded-1c-regular">
+                    В начале или конце {errorPlace} есть пробелы<br></br>
+                    Пожалуйста, напишите без них!
+                </p>}
+                {SignUpError !== "" && <p className="m-plus-rounded-1c-regular">
+                    Ошибка: {SignUpError}
+                </p>}
+            </div>
         )
     }
 }

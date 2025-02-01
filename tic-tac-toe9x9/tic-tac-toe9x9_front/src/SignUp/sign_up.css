@@ -1,0 +1,62 @@
+/* Контейнер формы */
+.registration-form {
+    border: 5px solid #F4F9B4;
+    border-radius: 8px;
+    padding: 20px 30px;
+    background-color: #fff;
+    width: 400px;
+}
+
+/* Стили для заголовка */
+.registration-form label:first-of-type {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #6a5acd;
+}
+
+/* Стили для полей ввода */
+.registration-form div {
+    margin-bottom: 15px;
+}
+
+.registration-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Кнопка */
+.registration-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #6a5acd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.registration-form button:hover {
+    background-color: #6a5acd;
+}
+
+/* Сообщения об ошибках */
+.registration-form p {
+    color: #6a5acd;
+    text-align: center;
+}
+
+/* Ссылка для входа */
+.registration-form a {
+    color: rgb(102, 212, 185);
+    text-decoration: none;
+}
+
+.registration-form a:hover {
+    text-decoration: underline;
+}
