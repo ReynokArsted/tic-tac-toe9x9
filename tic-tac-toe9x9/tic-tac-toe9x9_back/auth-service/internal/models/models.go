@@ -22,7 +22,6 @@ type Answer struct {
 	Win      int    `json:"win"`
 	Lose     int    `json:"lose"`
 	Error    string `json:"error"`
-	JWTtoken string `json:"jwttoken"`
 }
 
 type Claims struct {

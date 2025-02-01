@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/labstack/echo/v4"
 )
 
 func (u Usecase) AddPost(post models.Post) (int, error) {
@@ -26,7 +27,12 @@ func (u Usecase) GetComments(page, post_id int) (models.AnswerPageComments, erro
 	return u.p.GetComments(page, post_id)
 }
 
-func (u *Usecase) ValidationJWT(token_string string) (*models.Claims, error) {
+func (u *Usecase) ValidationJWT(c echo.Context) (*models.Claims, error) {
+	cookie, err := c.Request().Cookie("token")
+	if err != nil {
+		return nil, fmt.Errorf("ошибка в cookie не обнаружен token или его извлечение неуспешно.")
+	}
+	token_string := cookie.Value
 	claims := &models.Claims{}
 	token, err := jwt.ParseWithClaims(token_string, claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

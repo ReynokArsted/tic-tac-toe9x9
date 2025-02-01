@@ -19,13 +19,8 @@ func (srv *Server) createPostHandler(c echo.Context) error {
 		post models.Post
 	)
 	answer := models.CreatedPost{Post_id: -1}
-	authHeader := c.Request().Header.Get("Authorization")
-	if authHeader == "" || len(authHeader) < 8 {
-		answer.Error = "необходимо предоставить заголовок авторизации"
-		return c.JSON(http.StatusUnauthorized, answer)
-	}
-	tokenString := authHeader[7:]                    // Извлекаем токен из заголовка "Bearer <token>"
-	claims, err := srv.uc.ValidationJWT(tokenString) // проверяем токен
+
+	claims, err := srv.uc.ValidationJWT(c)
 	if err != nil {
 		answer.Error = "невозможно верифицировать токен " + err.Error()
 		return c.JSON(http.StatusUnauthorized, answer)
@@ -58,13 +53,7 @@ func (srv *Server) createCommentHandler(c echo.Context) error {
 		comment models.Comment
 	)
 	answer := models.AnswerComment{Comment_id: -1}
-	authHeader := c.Request().Header.Get("Authorization")
-	if authHeader == "" || len(authHeader) < 8 {
-		answer.Error = "необходимо предоставить заголовок авторизации"
-		return c.JSON(http.StatusUnauthorized, answer)
-	}
-	tokenString := authHeader[7:]                    // Извлекаем токен из заголовка "Bearer <token>"
-	claims, err := srv.uc.ValidationJWT(tokenString) // проверяем токен
+	claims, err := srv.uc.ValidationJWT(c)
 	if err != nil {
 		answer.Error = "невозможно верифицировать токен " + err.Error()
 		return c.JSON(http.StatusUnauthorized, answer)
@@ -163,15 +152,10 @@ func (srv *Server) deletePostById(c echo.Context) error {
 	post_id, err := strconv.Atoi(queryParams.Get("post_id"))
 
 	if err != nil {
-		return c.JSON(http.StatusOK, map[string]string{"error": err.Error()})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
-	authHeader := c.Request().Header.Get("Authorization")
-	if authHeader == "" || len(authHeader) < 8 {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "необходимо предоставить заголовок авторизации"})
-	}
-	tokenString := authHeader[7:]                    // Извлекаем токен из заголовка "Bearer <token>"
-	claims, err := srv.uc.ValidationJWT(tokenString) // проверяем токен
+	claims, err := srv.uc.ValidationJWT(c)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "невозможно верифицировать токен " + err.Error()})
 	}
@@ -190,18 +174,8 @@ func (srv *Server) updatePost(c echo.Context) error {
 		return c.JSON(http.StatusMethodNotAllowed, map[string]string{"error": "method not allowed"})
 	}
 
-	var (
-		post models.Post
-	)
-	authHeader := c.Request().Header.Get("Authorization")
-	if authHeader == "" || len(authHeader) < 8 {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Отсутсвует токен JWT"})
-	}
-	tokenString := authHeader[7:]                    // Извлекаем токен из заголовка "Bearer <token>"
-	claims, err := srv.uc.ValidationJWT(tokenString) // проверяем токен
-	if err != nil {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "невозможно верифицировать токен " + err.Error()})
-	}
+	var post models.Post
+	claims, err := srv.uc.ValidationJWT(c) // проверяем токен
 	err = json.NewDecoder(c.Request().Body).Decode(&post)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid body request"})
@@ -233,13 +207,7 @@ func (srv *Server) deleteCommentById(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusOK, map[string]string{"error": err.Error()})
 	}
-
-	authHeader := c.Request().Header.Get("Authorization")
-	if authHeader == "" || len(authHeader) < 8 {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "необходимо предоставить заголовок авторизации"})
-	}
-	tokenString := authHeader[7:]                    // Извлекаем токен из заголовка "Bearer <token>"
-	claims, err := srv.uc.ValidationJWT(tokenString) // проверяем токен
+	claims, err := srv.uc.ValidationJWT(c) // проверяем токен
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "невозможно верифицировать токен " + err.Error()})
 	}

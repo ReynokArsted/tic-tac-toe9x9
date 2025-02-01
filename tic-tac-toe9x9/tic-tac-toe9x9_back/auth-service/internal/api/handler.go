@@ -7,6 +7,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -28,11 +29,6 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 		Win:      0,
 		Lose:     0,
 		Error:    "",
-		JWTtoken: "NoToken",
-	}
-	if c.Request().Method != http.MethodPost {
-		answer.Error = errors.New("method not allowed").Error()
-		return c.JSON(http.StatusMethodNotAllowed, answer)
 	}
 	// Распарсиваем JSON-тело запроса
 	var user models.User
@@ -59,8 +55,16 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 			answer.Error = errors.New("can't geterate JWTKey").Error()
 			return c.JSON(http.StatusInternalServerError, models.Answer{})
 		}
-		answer.JWTtoken = JWT
-		c.Response().Header().Set("X-JWT-Token", JWT)
+		cookie := &http.Cookie{
+			Name:     "token",
+			Value:    JWT,
+			Path:     "/",
+			HttpOnly: true,
+			Secure:   true, // Используйте только по HTTPS
+			SameSite: http.SameSiteStrictMode,
+			Expires:  time.Now().Add(time.Hour * 24),
+		}
+		c.SetCookie(cookie)
 
 		return c.JSON(http.StatusCreated, answer)
 	}
@@ -84,11 +88,6 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 		Win:      0,
 		Lose:     0,
 		Error:    "",
-		JWTtoken: "NoToken",
-	}
-	if c.Request().Method != http.MethodPost {
-		answer.Error = errors.New("method not allowed").Error()
-		return c.JSON(http.StatusMethodNotAllowed, answer)
 	}
 	// Распарсиваем JSON-тело запроса
 	var user models.User
@@ -127,8 +126,16 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 		answer.Username = foundedUser.Username
 		answer.Win = foundedUser.Win
 		answer.Lose = foundedUser.Lose
-		answer.JWTtoken = JWT
-		c.Response().Header().Set("X-JWT-Token", JWT)
+		cookie := &http.Cookie{
+			Name:     "token",
+			Value:    JWT,
+			Path:     "/",
+			HttpOnly: true,
+			Secure:   true, // Используйте только по HTTPS
+			SameSite: http.SameSiteStrictMode,
+			Expires:  time.Now().Add(time.Hour * 24),
+		}
+		c.SetCookie(cookie)
 		return c.JSON(http.StatusOK, answer)
 	}
 	return c.JSON(http.StatusInternalServerError, answer)
