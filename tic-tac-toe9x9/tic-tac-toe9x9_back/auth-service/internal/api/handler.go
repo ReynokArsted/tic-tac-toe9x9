@@ -146,6 +146,7 @@ func (srv Server) StayAuth(c echo.Context) error {
 
 	answer, err := srv.uc.CheckCookie(c)
 	if err != nil {
+		answer.Error = err.Error()
 		if answer.Login != "" {
 			return c.JSON(400, answer)
 		} else {
