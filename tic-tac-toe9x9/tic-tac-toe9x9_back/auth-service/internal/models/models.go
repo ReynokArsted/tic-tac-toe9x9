@@ -25,7 +25,7 @@ type Answer struct {
 }
 
 type Claims struct {
-	UserName string `json:"login"`
+	Login string `json:"login"`
 	jwt.RegisteredClaims
 }
 
