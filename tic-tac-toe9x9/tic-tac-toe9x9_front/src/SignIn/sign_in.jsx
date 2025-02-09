@@ -40,11 +40,17 @@ export class SignIn extends Component {
                     'Content-Type': 'application/json', 
                 },
                 body: jsonData, 
-            });
+            })
 
             const result = await response.json()
             if (result.error !== "") {
                 this.setState({SignInError : result.error})
+                if (result.error === "введен неверный логин/пароль") {
+                    this.setState({SignInError: "Введён неверный пароль"})
+                }
+                if (result.error === "пользователь не найден") {
+                    this.setState({SignInError: "Пользователь с этим логином не найден"})
+                }     
             } else {
                 this.setState({SignInError: ""})
                 login(result) // Функция для обновления контекста
@@ -52,7 +58,9 @@ export class SignIn extends Component {
             console.log("Ответ от API:", result);
 
             } catch (error) {
+                if (error === "введён неверный логин/пароль")
                 console.error("Ошибка:", error);
+                
             }
 }            
 
@@ -86,8 +94,6 @@ export class SignIn extends Component {
         await this.SignIn(data)
 
         this.setState({
-            login: "",
-            password: "",
             errorKey: 0,
             errorPlace: 0
         })
@@ -137,7 +143,7 @@ export class SignIn extends Component {
                     Пожалуйста, заполните пустые поля!</p>}
                 {errorKey === 2 && <p>В начале или конце {errorPlace} есть пробелы<br></br>
                     Пожалуйста, напишите без них!</p>}
-                {SignInError !== "" && <p>Ошибка: {SignInError}</p>}
+                {SignInError !== "" && <p>{SignInError}</p>}
             </div>
         )
     }

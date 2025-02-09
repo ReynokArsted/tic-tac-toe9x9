@@ -60,7 +60,7 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 			Value:    JWT,
 			Path:     "/",
 			HttpOnly: true,
-			Secure:   false, // Используйте по HTTP
+			Secure:   false,
 			SameSite: http.SameSiteNoneMode,
 			Expires:  time.Now().Add(time.Hour * 24),
 		}
@@ -131,7 +131,7 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 			Value:    JWT,
 			Path:     "/",
 			HttpOnly: true,
-			Secure:   false, // Используйте по HTTP
+			Secure:   false,
 			SameSite: http.SameSiteNoneMode,
 			Expires:  time.Now().Add(time.Hour * 24),
 		}

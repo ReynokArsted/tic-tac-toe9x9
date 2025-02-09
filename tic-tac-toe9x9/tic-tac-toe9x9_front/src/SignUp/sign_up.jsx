@@ -3,6 +3,7 @@ import { AppContext } from "../App/Context";
 import { Link, Navigate } from "react-router-dom";
 import {} from "./sign_up.css";
 import {} from "../Forum/Comments.css"
+import {} from "../Panel/style.css"
 
 export class SignUp extends Component {
     state = {
