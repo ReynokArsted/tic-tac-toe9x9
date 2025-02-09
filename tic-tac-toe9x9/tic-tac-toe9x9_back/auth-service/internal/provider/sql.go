@@ -64,7 +64,7 @@ func (p *Provider) CheckPassword(login, password string) (models.Answer, error) 
 
 func (p *Provider) GenerateJWT(login string) (string, error) {
 	claims := models.Claims{
-		UserName: login,
+		Login: login,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 30)), // Истекает через 30 минут
 			IssuedAt:  jwt.NewNumericDate(time.Now()),

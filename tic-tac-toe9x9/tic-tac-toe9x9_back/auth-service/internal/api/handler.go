@@ -140,3 +140,18 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 	}
 	return c.JSON(http.StatusInternalServerError, answer)
 }
+
+func (srv Server) StayAuth(c echo.Context) error {
+	var answer models.Answer
+
+	answer, err := srv.uc.CheckCookie(c)
+	if err != nil {
+		answer.Error = err.Error()
+		if answer.Login != "" {
+			return c.JSON(400, answer)
+		} else {
+			return c.JSON(500, answer)
+		}
+	}
+	return c.JSON(200, answer)
+}

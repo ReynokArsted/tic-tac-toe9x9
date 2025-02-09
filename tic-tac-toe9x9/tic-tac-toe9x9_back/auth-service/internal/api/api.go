@@ -20,6 +20,7 @@ func NewServer(ip string, port int, uc Usecase) *Server {
 	}
 	srv.Server.POST("/singIn", srv.SingInHandler)
 	srv.Server.POST("/singUp", srv.SingUpHandler)
+	srv.Server.GET("/stayAuth", srv.StayAuth)
 
 	return srv
 }
