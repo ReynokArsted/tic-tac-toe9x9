@@ -6,7 +6,7 @@ import { MainPage } from "../MainPage/MainPage";
 import { SignUp } from '../SignUp/sign_up';
 import { SignIn } from '../SignIn/sign_in';
 import { AppContext} from './Context';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Profile } from '../Profile/Profile';
 import { Forum } from '../Forum/Forum';
 import { TopicDis } from '../Forum/TopicDis';
@@ -79,31 +79,11 @@ function App() {
   const [UserAvatarForProfile, setUserAvatarForProfile] = useState(AvatarForProfile)
   const [Wins, setWinsNumber] = useState(0)
   const [Loses, setLosesNumber] = useState(0)
-  const [UserToken, setUserToken] = useState("")
+  const [loading, setLoading] = useState(true)
 
   const [PostID, setPostID] = useState(0)
   const [UserIsCreator, setUserState] = useState(false)
   const [IsUpdate, setUpdate] = useState(false)
-
-  const login = (data) => {
-    setUserIsLoged(true)
-    setLogin(data.login)
-    setName(data.username)
-    setPassword(data.password)
-    setWins(data.win)
-    setLoses(data.lose)
-    setToken(data.jwttoken)
-  }
-
-  const logout = () => {
-    setUserIsLoged(false)
-    setLogin("")
-    setName("")
-    setPassword("")
-    setWins(0)
-    setLoses(0)
-    setToken("")
-  }
 
   const setLogin = (userlogin) => {
     setUserLogin(userlogin)
@@ -130,10 +110,6 @@ function App() {
     setLosesNumber(number)
   }
 
-  const setToken = (token) => {
-    setUserToken(token)
-  }
-
   const setPosID = (id) => {
     setPostID(id)
   }
@@ -146,12 +122,56 @@ function App() {
     setUpdate(!IsUpdate)
   }
 
+  const login = useCallback((data) => {
+    setUserIsLoged(true);
+    setLogin(data.login);
+    setName(data.username);
+    setPassword(data.password);
+    setWins(data.win);
+    setLoses(data.lose);
+  }, []); 
+
+  const logout = () => {
+    setUserIsLoged(false)
+    setLogin("")
+    setName("")
+    setPassword("")
+    setWins(0)
+    setLoses(0)
+  }
+
+  useEffect(() => {
+    fetch("http://localhost:9090/stayAuth", {
+      method: "GET",
+      credentials: "include"
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          throw new Error("Unauthorized")
+        }
+      })
+      .then(data => {
+        login(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error("Ошибка авторизации:", error);
+        setLoading(false);
+      });
+  }, [login]);
+
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
+
   return (
   <AppContext.Provider value={
     {UserIsLoged, Login, UserName, Password, UserAvatarForPanel, 
-    UserAvatarForProfile, Wins, Loses, UserToken, login, 
+    UserAvatarForProfile, Wins, Loses, login, 
     logout, setName, setLogin, setPassword, setAvatar, 
-    setWins, setLoses, setToken, PostID, setPosID, 
+    setWins, setLoses, PostID, setPosID, 
     UserIsCreator, setCreator, IsUpdate, Update
     }}>
         <div className="App">

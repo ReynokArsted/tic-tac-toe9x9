@@ -61,7 +61,7 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 			Path:     "/",
 			HttpOnly: true,
 			Secure:   false,
-			SameSite: http.SameSiteNoneMode,
+			SameSite: http.SameSiteLaxMode,
 			Expires:  time.Now().Add(time.Hour * 24),
 		}
 		c.SetCookie(cookie)
@@ -132,7 +132,7 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 			Path:     "/",
 			HttpOnly: true,
 			Secure:   false,
-			SameSite: http.SameSiteNoneMode,
+			SameSite: http.SameSiteLaxMode,
 			Expires:  time.Now().Add(time.Hour * 24),
 		}
 		c.SetCookie(cookie)
