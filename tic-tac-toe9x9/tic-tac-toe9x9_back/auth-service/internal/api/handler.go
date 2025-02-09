@@ -60,8 +60,8 @@ func (srv *Server) SingUpHandler(c echo.Context) error {
 			Value:    JWT,
 			Path:     "/",
 			HttpOnly: true,
-			Secure:   true, // Используйте только по HTTPS
-			SameSite: http.SameSiteStrictMode,
+			Secure:   false,
+			SameSite: http.SameSiteNoneMode,
 			Expires:  time.Now().Add(time.Hour * 24),
 		}
 		c.SetCookie(cookie)
@@ -131,8 +131,8 @@ func (srv *Server) SingInHandler(c echo.Context) error {
 			Value:    JWT,
 			Path:     "/",
 			HttpOnly: true,
-			Secure:   true, // Используйте только по HTTPS
-			SameSite: http.SameSiteStrictMode,
+			Secure:   false,
+			SameSite: http.SameSiteNoneMode,
 			Expires:  time.Now().Add(time.Hour * 24),
 		}
 		c.SetCookie(cookie)
